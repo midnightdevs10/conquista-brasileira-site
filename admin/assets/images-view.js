@@ -375,8 +375,11 @@
     // Modal de Substituir com duas fontes:
     //   1) "Escolher arquivo"  — upload novo (a imagem já aparece na Galeria
     //      automaticamente, porque a Galeria lista tudo em assets/images/).
-    //   2) "Escolher da galeria" — pega uma imagem já existente e move ela
-    //      pro slot (a origem é removida da galeria).
+    //   2) "Escolher da galeria" — pega uma imagem já existente da galeria.
+    //      O slot é RENOMEADO pro nome do source (imagem B), a imagem
+    //      antiga do slot (imagem A) é preservada na galeria como
+    //      "<slot>-old-<timestamp>.<ext>", e as referências em
+    //      index.html / data/config.json / js/*.js são atualizadas.
     A.openModal({
       titleHtml: 'Substituir <span class="text-red">' + A.esc(baseName(img.name)) + '</span>',
       body:
@@ -445,16 +448,17 @@
       onConfirm: async () => {
         const activePane = document.querySelector('.swap-source-pane:not([hidden])');
         if (activePane && activePane.dataset.sourcePane === 'galeria') {
-          // Galeria: pega a imagem selecionada no grid
+          // Galeria: pega a imagem selecionada no grid e troca com renomeação.
+          // O slot vira com o nome do source, a imagem antiga vai pra galeria.
           const sel = document.querySelector('#modal-swap-galeria-grid [data-galeria-name].is-selected');
           if (!sel) throw new Error('Escolha uma imagem da galeria antes de continuar.');
           const sourceName = sel.dataset.galeriaName;
-          await A.api('api/images_swap_from.php', {
+          const data = await A.api('api/images_swap_from_rename.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'slot=' + encodeURIComponent(img.name) + '&source=' + encodeURIComponent(sourceName),
           });
-          A.toast('Imagem substituída pela da galeria.', 'success');
+          A.toast('Trocado: slot agora é "' + baseName(data.name) + '". "' + baseName(data.oldName) + '" foi pra galeria como "' + baseName(data.preservedName) + '".', 'success');
           await loadList();
         } else {
           // Arquivo: upload novo

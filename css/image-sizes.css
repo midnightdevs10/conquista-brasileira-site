@@ -1,0 +1,42 @@
+/* ================================================================
+   IMAGE-SIZES - Conquista Brasileira Pastelaria
+   Trava as dimensões de imagens que NÃO tinham tamanho fixo,
+   pra que trocar a imagem no admin não distorça o layout.
+
+   Estratégia: força aspect-ratio no container + object-fit: contain
+   na <img>. A imagem aparece INTEIRA (sem cortar) e o slot
+   mantém a forma definida pelo CSS, não pela imagem.
+
+   Galeria, cards de serviço e modal de serviço JÁ têm tamanho +
+   object-fit definidos em components.css — não são alterados aqui.
+   ================================================================ */
+
+/* === HERO: imagem flutuante ===
+   Antes (layout.css): .hero-floating img { width: 100%; height: auto; }
+   → assumia tamanho natural da imagem, distorcia ao trocar.
+   Agora: 1:1 quadrado + contain. O rotate(-3deg) e o border-radius
+   do .hero-floating img (em layout.css) continuam valendo. */
+.hero-floating {
+  aspect-ratio: 1 / 1;
+}
+.hero-floating img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* === ABOUT: 2 imagens empilhadas ===
+   Antes (layout.css): aspect-ratio: 4/3 no container + object-fit: cover na img
+   → cortava bordas se a imagem tivesse outra proporção.
+   Agora: mesmo aspect-ratio 4/3, mas object-fit: contain. A imagem
+   INTEIRA aparece; o fundo do container é cinza-quente (--color-line)
+   pra suavizar o "espaço vazio" quando a proporção difere de 4:3. */
+.about-img-main,
+.about-img-sub {
+  background: var(--color-line);
+}
+.about-img-main img,
+.about-img-sub img {
+  object-fit: contain;
+  object-position: center;
+}
