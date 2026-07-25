@@ -1,0 +1,947 @@
+/* ================================================================
+   CARDÁPIO - Conquista Brasileira Pastelaria
+   Cardápio digital com aparência de livro / virar páginas.
+   Reutiliza os design tokens do projeto (--color-*, --font-*,
+   --radius-*, --shadow-*). Sem novos tokens.
+   ================================================================ */
+
+/* === Section wrapper === */
+.section-menu { background: var(--color-cream); }
+/* Padding vertical segue a padronização global (--section-spacing, em
+   components.css). Sem override. */
+.menu-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+/* === Book container (StPageFlip injeta aqui) === */
+.book {
+  position: relative;
+  width: 100%;
+  max-width: 850px;
+  /* StPageFlip define a altura via size:'stretch', mas em landscape
+     o pai precisa de uma altura definida. Damos um aspect-ratio
+     aproximado e a biblioteca ajusta. */
+  /* Aspect-ratio "livro aberto" — 2 páginas com proporção 5:7 (retrato
+     de cardápio) lado a lado = livro 10:7 ≈ 1.43:1. */
+  aspect-ratio: 10 / 7;
+  /* min/max-height: livro cabe em notebooks comuns (~768px) sem rolar.
+     Com livro de 850px de largura, a altura 10:7 = ~595px (max-height
+     aqui). Em viewports menores o aspect-ratio respeita o container. */
+  min-height: 400px;
+  max-height: 595px;
+  margin: 0 auto;
+  /* Sombra do livro fechado */
+  filter: drop-shadow(0 30px 60px rgba(31, 26, 23, 0.22))
+          drop-shadow(0 8px 16px rgba(31, 26, 23, 0.12));
+}
+@media (max-width: 900px) {
+  /* Em tablet: 2 páginas 5:7 ainda, só ajusta a altura máx. */
+  .book { aspect-ratio: 10 / 7; max-height: 540px; }
+}
+@media (max-width: 560px) {
+  /* Mobile: uma página por vez (retrato) — proporção 5:7. */
+  .book { aspect-ratio: 5 / 7; min-height: 520px; max-height: none; }
+  /* No mobile, a página esquerda (que projeta a linha) não aparece,
+     então a linha some naturalmente. */
+  .book-page--right { box-shadow: inset 8px 0 18px -10px rgba(31, 26, 23, 0.18); }
+}
+
+/* StPageFlip gera uma `.stf__block` interna — escondemos até a lib montar */
+.book .stf__block { visibility: visible; }
+
+/* === LINHA PRETA NO CENTRO (lombada do cardápio) ===
+   A StPageFlip 2.0.7 adiciona dinamicamente as classes `--left` e `--right`
+   (sem prefixo stf__item) no wrapper `.stf__item` conforme a página
+   aparece na esquerda ou na direita do par visível. CONFIRMADO via
+   DOM dump: <div class="book-page-wrapper stf__item --soft --simple --right">.
+   Usamos essas classes pra aplicar a borda EXATAMENTE na borda interna
+   de cada par visível — nunca na borda extrema do livro. Como o
+   `.book-page` é filho do `.stf__item` e tem `box-sizing: border-box`
+   + `width: 100%`, a borda do .stf__item não afeta o tamanho da página
+   — apenas "vaza" 1px pra fora do wrapper, do lado do centro, criando
+   a linha preta no encontro dos dois itens. Como a borda pertence ao
+   wrapper e ele vira junto com o flip (rotateY), a linha vira junto. */
+.stf__item.--left  { box-shadow: inset -8px 0 14px -8px rgba(31, 26, 23, 0.18), 1px 0 0 0 #0c0a09; }
+.stf__item.--right { box-shadow: inset  8px 0 14px -8px rgba(31, 26, 23, 0.18), -1px 0 0 0 #0c0a09; }
+
+/* === Página genérica (todas as folhas do livro) === */
+.book-page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-paper);
+  /* box-sizing border-box pra borda não estourar o tamanho da página
+     e manter o encontro das duas no centro exato do livro. */
+  box-sizing: border-box;
+  /* Textura sutil de papel — pontos suaves */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-blend-mode: multiply;
+  color: var(--color-ink);
+}
+.book-page__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Padding reduzido pra caber melhor no livro menor (max-height 560px). */
+  padding: clamp(1rem, 3vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+}
+/* Numeração da página (canto inferior externo — sempre do lado oposto à lombada).
+   Usa as classes dinâmicas da StPageFlip (`--left` / `--right`) pra alinhar
+   a numeração no canto externo de cada página. */
+.book-page__number {
+  position: absolute;
+  bottom: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.stf__item.--left  .book-page__number { right: 1.5rem; }
+.stf__item.--right .book-page__number { left: 1.5rem; }
+
+/* === Header de seção (eyebrow + título + linha + descrição) === */
+.menu-section-head {
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+}
+.menu-section-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-primary);
+  margin-bottom: 0.3rem;
+}
+/* Etiqueta "Continuação" — exibida em cabeçalhos de páginas 2+ de uma
+   seção grande (quebrada em várias páginas). Mais discreta que o eyebrow. */
+.menu-section-eyebrow-continuation {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+  margin-bottom: 0.2rem;
+  font-style: italic;
+}
+.menu-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.menu-section-lead {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+  line-height: 1.4;
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+/* === Lista de sabores === */
+.menu-flavor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow: hidden;
+}
+/* (menu-flavor-list--cols removido: a paginação agora quebra seções
+   grandes em 2+ páginas em vez de comprimir em 2 colunas via CSS.) */
+
+.menu-flavor {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  /* Padding vertical reduzido — lista mais densa pro livro menor. */
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--color-line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.menu-flavor:last-child { border-bottom: 0; }
+.menu-flavor:hover { color: var(--color-primary); }
+.menu-flavor:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.menu-flavor-name {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.menu-flavor:hover .menu-flavor-name { color: var(--color-primary); }
+.menu-flavor-name-text { flex: 1; }
+.menu-flavor-tag {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: var(--color-tertiary);
+  /* Tag menor e mais discreta. */
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-pill);
+  line-height: 1.2;
+}
+.menu-flavor-tag--combo { background: var(--color-primary); }
+.menu-flavor-desc {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-ink-soft);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+/* === Layout split (2 categorias lado a lado numa página) === */
+.menu-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Gap reduzido pra caber melhor no livro menor. */
+  gap: 1.25rem;
+  flex: 1;
+  overflow: hidden;
+  align-items: start;
+}
+.menu-split > .menu-flavor-list { overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.menu-split > .menu-flavor-list + .menu-flavor-list {
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--color-line);
+}
+@media (max-width: 700px) {
+  .menu-split {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .menu-split > .menu-flavor-list + .menu-flavor-list {
+    padding-left: 0;
+    padding-top: 1rem;
+    border-left: 0;
+    border-top: 1px solid var(--color-line);
+  }
+}
+
+/* === Layout com foto à esquerda === */
+/* (removido — cardápio agora é 100% textual, sem fotos) */
+
+/* === Capa (página 1) — Cardápio premium (couro preto) ===
+   Profundidade REAL = 3 fontes visuais que o olho lê como relevo:
+     A) Iluminação direcional (gradiente radial âmbar vinda de cima-esquerda)
+     B) Curvatura física (gradiente linear vertical — capa "arqueada")
+     C) Vinco central horizontal (gradiente que afunda a "barriga" do couro)
+   Mais:
+     D) Textura de couro procedural (alpha alto, blend 'screen' pra relevos)
+     E) Lombada com gradiente de sombra real
+     F) Box-shadow inset simulando sombra ambiente do material
+
+   Por que era plano antes: usávamos `background-blend-mode: overlay` que,
+   sobre base preta, anula qualquer contribuição de cor. Agora usamos
+   `screen` e `soft-light` que ADICIONAM luz visível ao preto.
+*/
+.book-cover {
+  width: 100%;
+  height: 100%;
+  background-color: #0c0a09;
+  background-image:
+    /* 1) ILUMINAÇÃO PRINCIPAL — luz âmbar vinda de cima-esquerda
+          (reduzida de 0.22 → 0.14 pra capa mais sóbria/escura) */
+    radial-gradient(ellipse 120% 90% at 15% 0%, rgba(255, 210, 160, 0.14) 0%, rgba(255, 210, 160, 0.06) 25%, rgba(255, 210, 160, 0.02) 50%, transparent 70%),
+    /* 2) CONTRALUZ — luz fraca azulada vinda de baixo-direita
+          (reduzida de 0.10 → 0.06) */
+    radial-gradient(ellipse 80% 60% at 100% 100%, rgba(120, 140, 180, 0.06) 0%, transparent 60%),
+    /* 3) CURVATURA FÍSICA — gradiente vertical que simula a capa "arqueada":
+          centro da capa levemente mais claro (alto), bordas superior e
+          inferior mais escuras (sombra). */
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0.20) 10%,
+      rgba(255, 220, 180, 0.04) 35%,
+      rgba(255, 220, 180, 0.05) 50%,
+      rgba(255, 220, 180, 0.04) 65%,
+      rgba(0, 0, 0, 0.20) 90%,
+      rgba(0, 0, 0, 0.55) 100%),
+    /* 4) VINCO CENTRAL HORIZONTAL — sombra horizontal sutil que simula
+          a "barriga" do couro de livro (a capa tem um leve bojo no meio) */
+    linear-gradient(0deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.25) 50%,
+      transparent 60%,
+      transparent 100%),
+    /* 5) CURVATURA LATERAL — a capa "infla" no centro horizontal
+          (gradiente simétrico, escurece as laterais) */
+    linear-gradient(90deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      transparent 8%,
+      transparent 20%,
+      rgba(0, 0, 0, 0.10) 50%,
+      transparent 80%,
+      transparent 92%,
+      rgba(0, 0, 0, 0.3) 100%),
+    /* 6) LOMBADA — faixa vertical esquerda (24px) — agora com gradiente
+          que vai do preto puro → um highlight sutil → preto puro,
+          simulando a curvatura cilíndrica do livro */
+    linear-gradient(90deg,
+      #000000 0%,
+      #000000 4px,
+      #1a1208 8px,
+      #2a1d10 12px,
+      #1a1208 18px,
+      #0a0807 22px,
+      transparent 26px),
+    /* 7) TEXTURA PRINCIPAL de couro — usa 'screen' (não 'overlay') pra
+          ADICIONAR luz ao preto em vez de multiplicar. O efeito é de
+          grão de couro iluminado (highlights em cinza claro sobre o preto) */
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='3' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* 8) TEXTURA SECUNDÁRIA — grão fino (relevos micro) */
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='2' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.25 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  /* BLEND MODES CORRETOS pra cada camada:
+     - 1-5: 'normal' (gradientes sólidos, não devem misturar)
+     - 6: 'normal' (lombada sólida)
+     - 7-8: 'screen' (texturas ADICIONAM luz ao preto) + 'soft-light' (refina) */
+  background-blend-mode: normal, normal, soft-light, soft-light, soft-light, normal, screen, soft-light;
+  color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centraliza verticalmente (visual de capa clássica, simétrico) */
+  justify-content: center;
+  text-align: center;
+  padding: 1.25rem 1.25rem 1.25rem calc(1.25rem + 26px);
+  overflow: hidden;
+  border-radius: 3px 6px 6px 3px;
+  /* Box-shadow composta — combina com as camadas de fundo:
+     1) Sombra da lombada (escurece borda esquerda, como se projetasse sombra)
+     2) Brilho quente na borda direita (luz refletida)
+     3) Sombra topo/base (sombra ambiente em superfícies curvas) */
+  box-shadow:
+    inset 10px 0 22px -8px rgba(0, 0, 0, 0.9),
+    inset -3px 0 12px -3px rgba(255, 200, 150, 0.08),
+    inset 0 8px 18px -10px rgba(0, 0, 0, 0.85),
+    inset 0 -8px 18px -10px rgba(0, 0, 0, 0.85);
+}
+
+/* ::before — moldura decorativa filete-duplo (estilo encadernação vintage)
+   Implementada em 1 único ::before com 4 layers:
+     - 1 borda externa sólida (filete principal, laranja @ 45%)
+     - 1 filete interno via box-shadow inset (laranja @ 25%, 6px dentro)
+   Os 4 "cantos de ferragem" são desenhados com radial-gradients pequenos
+   nos 4 cantos, fora da borda (não interferem no conteúdo). */
+.book-cover::before {
+  content: '';
+  position: absolute;
+  /* Margem interna pra não encostar nas bordas (14px de respiro, +24px da lombada) */
+  inset: 14px 14px 14px calc(14px + 24px);
+  border: 1px solid rgba(232, 93, 4, 0.45);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+  /* Filete duplo: segunda borda mais fina, 6px dentro da primeira */
+  box-shadow:
+    inset 0 0 0 6px transparent,
+    inset 0 0 0 7px rgba(232, 93, 4, 0.25);
+  /* 4 ferragens de canto (losangos pequenos) fora da borda — puramente decorativo */
+  background-image:
+    radial-gradient(circle, rgba(232, 93, 4, 0.55) 0%, rgba(232, 93, 4, 0.55) 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(232, 93, 4, 0.55) 0%, rgba(232, 93, 4, 0.55) 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(232, 93, 4, 0.55) 0%, rgba(232, 93, 4, 0.55) 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(232, 93, 4, 0.55) 0%, rgba(232, 93, 4, 0.55) 1.5px, transparent 2px);
+  background-size: 12px 12px, 12px 12px, 12px 12px, 12px 12px;
+  background-position: -6px -6px, calc(100% + 6px) -6px, -6px calc(100% + 6px), calc(100% + 6px) calc(100% + 6px);
+  background-repeat: no-repeat;
+}
+
+/* Costura aparente (linha de pesponto) — agora em 3 lados (esquerda/principal
+   + topo + base) pra fechar o efeito de encadernação completa. Os 3 são
+   desenhados em camadas diferentes do background do ::after. */
+.book-cover::after {
+  content: '';
+  position: absolute;
+  /* Costura principal: lombada esquerda (centro a 12px da borda) */
+  left: 12px;
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  /* Pontos laranja espaçados: 2px aceso, 4px apagado (mais denso que antes) */
+  background:
+    /* Costura do topo (horizontal, curta) */
+    linear-gradient(to right,
+      transparent 0,
+      transparent 24px,
+      #e85d04 24px, #e85d04 26px,
+      transparent 26px, transparent 30px,
+      #e85d04 30px, #e85d04 32px,
+      transparent 32px, transparent 100%),
+    /* Costura da base (horizontal, curta) */
+    linear-gradient(to right,
+      transparent 0,
+      transparent 24px,
+      #e85d04 24px, #e85d04 26px,
+      transparent 26px, transparent 30px,
+      #e85d04 30px, #e85d04 32px,
+      transparent 32px, transparent 100%),
+    /* Costura principal vertical (lombada) */
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      #e85d04 3px,
+      #e85d04 5px
+    );
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: 100% 10px, 100% 10px, 100% 100%;
+  background-position: top, bottom, 0 0;
+  /* Glow laranja reforçado — sugere linha iluminada no couro */
+  box-shadow:
+    0 0 3px rgba(232, 93, 4, 0.55),
+    0 0 8px rgba(232, 93, 4, 0.22);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Conteúdo da capa (filhos diretos) — precisa estar ACIMA da moldura
+   decorativa (::before, z-index:1) e da costura (::after, z-index:1).
+   Sem isso, o título/brand/origem ficam visualmente "atrás" da moldura. */
+.book-cover > * {
+  position: relative;
+  z-index: 2;
+}
+/* Reset das margens nativas — os wrappers .book-cover__top / __bottom
+   controlam TODO o espaçamento via gap. Isso garante que a distribuição
+   entre topo e rodapé seja controlada APENAS pelo justify-content do pai.
+   NOTA: com a capa centralizada (justify-content: center), os elementos
+   voltam a usar margin-bottom individuais pra controlar o espaçamento
+   entre si — sem o wrapper, o gap não tem onde aplicar. */
+.book-cover__ornament,
+.book-cover__brand,
+.book-cover__title,
+.book-cover__tagline,
+.book-cover__start {
+  margin: 0;
+}
+/* === "Desde 2020" — agora é a ASSINATURA discreta no RODAPÉ da capa.
+   Fica abaixo do botão "Abrir cardápio", funcionando como carimbo
+   de finalização. Tamanho intermediário (rubrica legível, não destaque).
+   margin-top garante o respiro acima (entre o botão e ele), já que
+   o botão não tem margin-bottom (pra não vazar pra contracapa). */
+.book-cover__ornament {
+  font-family: var(--font-script);
+  font-size: 1.1rem;
+  /* Laranja premium — único acento colorido permitido na capa. */
+  color: #e85d04;
+  margin: 1.2rem 0 0;          /* respiro acima, encosta no rodapé */
+  line-height: 1;
+  opacity: 0.9;
+}
+/* === "Pastelaria Brasileira · Cajamar/SP" — agora é o SUB-TÍTULO
+   no topo da capa (logo abaixo da logo, antes do "Cardápio").
+   Por isso: margin-bottom (respiro abaixo, antes do título). */
+.book-cover__brand {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0.8rem;
+}
+
+/* === Logo na capa (selo circular entre brand e título) ===
+   - Formato: circular (border-radius: 50%) com anel dourado
+   - Tamanho: 110px de diâmetro
+   - Brilho: 2 drop-shadows âmbar (1 próximo forte, 1 distante difuso)
+   - Anel dourado: box-shadow inset simulando borda em alto-relevo
+   - Halo externo: box-shadow 0 0 criando "auréola" dourada em volta */
+.book-cover__logo {
+  display: block;
+  width: 150px;
+  height: 150px;
+  /* Margem: sem espaço no topo (encosta no topo da capa), 1.4rem embaixo
+     (mais respiro antes do "Desde 2020"). Auto nas laterais = centralizado. */
+  margin: 0 auto 1.4rem;
+  object-fit: cover;          /* cover pra preencher o círculo (corta bordas da logo se tiver) */
+  border-radius: 50%;         /* círculo perfeito */
+  /* Brilho dourado — 2 camadas:
+     1) Drop próximo: borda âmbar viva (ilumina a logo)
+     2) Drop distante: glow suave laranja (auréola ambiente) */
+  filter:
+    brightness(1.05)
+    contrast(1.05)
+    drop-shadow(0 0 5px rgba(255, 200, 120, 0.6))
+    drop-shadow(0 0 16px rgba(232, 93, 4, 0.28));
+  /* Anel dourado (inset 1) + halo dourado (0 0 externo) + sombra de profundidade */
+  box-shadow:
+    /* Anel interno dourado — borda iluminada (luz pegando a borda do círculo) */
+    inset 0 0 0 2px rgba(255, 200, 120, 0.55),
+    /* Anel interno escuro (2px além) — cria a "borda do carimbo" no couro */
+    inset 0 0 0 3px rgba(0, 0, 0, 0.4),
+    /* Halo dourado externo — auréola em volta do círculo */
+    0 0 0 4px rgba(232, 93, 4, 0.15),
+    /* Sombra de profundidade — logo flutua acima do couro */
+    0 6px 16px rgba(0, 0, 0, 0.55);
+  position: relative;
+}
+/* NOTA: vinheta interna via ::after em <img> não funciona em todos
+   os engines (tag substituída não aceita pseudo-elementos visuais).
+   O efeito de "carimbo" já está coberto pelo inset box-shadow acima. */
+.book-cover__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  /* Título da capa reduzido. */
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 0.8rem;        /* 0.4 → 0.8 (mais respiro antes da tagline) */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+.book-cover__title .accent {
+  /* Laranja premium (mantém a paleta solicitada: laranja + branco). */
+  color: #e85d04;
+  display: block;
+  font-size: 0.78em;
+  margin-top: 0.2em;
+}
+.book-cover__tagline {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 320px;
+  line-height: 1.4;
+  margin-top: 0.7rem;           /* 0.4 → 0.7 (mais respiro entre título e tagline) */
+}
+.book-cover__start {
+  margin-top: 1.4rem;           /* 1 → 1.4 (mais respiro entre tagline e CTA) */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Botão "Abrir cardápio" mais compacto. */
+  padding: 0.55rem 1.1rem;
+  background: #fff;
+  /* Laranja premium (paleta da capa: branco + laranja). */
+  color: #e85d04;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transition), box-shadow var(--transition);
+  cursor: pointer;
+  border: 0;
+}
+.book-cover__start:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+.book-cover__start svg { width: 12px; height: 12px; }
+
+/* Variante WhatsApp do botão "Abrir cardápio" — usada na contracapa.
+   Mantém o estilo (pill, fundo claro, sombra), mas com verde WhatsApp
+   em vez de laranja pra reforçar a ação. */
+.book-cover__start--whatsapp {
+  background: #fff;
+  color: #25d366;
+  margin-top: 0.6rem;
+}
+.book-cover__start--whatsapp svg {
+  width: 14px;
+  height: 14px;
+}
+.book-cover__start--whatsapp:hover {
+  box-shadow: 0 14px 32px rgba(37, 211, 102, 0.35);
+}
+
+/* Footer da capa/contracapa ("feito com ♥ em Cajamar"). */
+.book-cover__footer {
+  margin-top: auto;
+  padding-top: 0.7rem;
+  font-family: var(--font-script);
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  letter-spacing: 0.02em;
+  text-align: center;
+  width: 100%;
+}
+
+/* === Contracapa: ESPELHO da capa (lombada/costura à DIREITA)
+   Mesma profundidade da capa frontal — só espelhada. Herda a maior parte
+   do `.book-cover` e sobrescreve as 4 propriedades espaciais:
+   - padding (lombada à direita)
+   - background-image (todas as 7 camadas espelhadas via `to left`)
+   - ::after (costura à direita)
+   - ::before (moldura espelhada — inset recalculado) */
+.book-cover--back {
+  /* Espelha o padding pra dar espaço à lombada à direita */
+  padding: 1.25rem calc(1.25rem + 26px) 1.25rem 1.25rem;
+  /* Espelha as 8 camadas de profundidade (lombada à direita,
+     spotlight vindo de cima-DIREITA, contraluz vindo de baixo-ESQUERDA) */
+  background-image:
+    /* Spotlight — canto superior DIREITO (espelhado, reduzido p/ 0.14) */
+    radial-gradient(ellipse 120% 90% at 85% 0%, rgba(255, 210, 160, 0.14) 0%, rgba(255, 210, 160, 0.06) 25%, rgba(255, 210, 160, 0.02) 50%, transparent 70%),
+    /* Contraluz — canto inferior ESQUERDO (espelhado, reduzido p/ 0.06) */
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(120, 140, 180, 0.06) 0%, transparent 60%),
+    /* Curvatura vertical (mesma direção, sempre vertical, mais escura) */
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.45) 0%,
+      rgba(0, 0, 0, 0.20) 10%,
+      rgba(255, 220, 180, 0.04) 35%,
+      rgba(255, 220, 180, 0.05) 50%,
+      rgba(255, 220, 180, 0.04) 65%,
+      rgba(0, 0, 0, 0.20) 90%,
+      rgba(0, 0, 0, 0.55) 100%),
+    /* Vinco central horizontal (mesma direção) */
+    linear-gradient(0deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.25) 50%,
+      transparent 60%,
+      transparent 100%),
+    /* Curvatura lateral — espelhada (lombada à direita, infla lá) */
+    linear-gradient(90deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      transparent 8%,
+      transparent 20%,
+      rgba(0, 0, 0, 0.10) 50%,
+      transparent 80%,
+      transparent 92%,
+      rgba(0, 0, 0, 0.4) 100%),
+    /* Lombada à DIREITA (espelhada — gradiente agora vai da direita p/ esquerda,
+       criando a mesma curvatura cilíndrica no lado oposto) */
+    linear-gradient(90deg,
+      transparent 0%,
+      #0a0807 calc(100% - 26px),
+      #1a1208 calc(100% - 22px),
+      #2a1d10 calc(100% - 18px),
+      #1a1208 calc(100% - 12px),
+      #000000 calc(100% - 8px),
+      #000000 100%),
+    /* Textura principal de couro (alpha 0.45, blend 'screen') */
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='3' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* Textura secundária — grão fino (alpha 0.25, blend 'soft-light') */
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='2' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.25 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-blend-mode: normal, normal, soft-light, soft-light, soft-light, normal, screen, soft-light;
+  /* Cantos arredondados invertidos (esquerda reta, direita quebrada — espelha capa) */
+  border-radius: 6px 3px 3px 6px;
+  /* Box-shadow espelhada: sombra da lombada à DIREITA */
+  box-shadow:
+    inset -10px 0 22px -8px rgba(0, 0, 0, 0.9),
+    inset 3px 0 12px -3px rgba(255, 200, 150, 0.08),
+    inset 0 8px 18px -10px rgba(0, 0, 0, 0.85),
+    inset 0 -8px 18px -10px rgba(0, 0, 0, 0.85);
+}
+/* Moldura decorativa da contracapa — espelhada (24px de lombada à DIREITA) */
+.book-cover--back::before {
+  /* Em vez de `inset: 14px 14px 14px calc(14px + 24px)`, espelha:
+     margem esquerda normal + margem direita compensada pela lombada. */
+  inset: 14px calc(14px + 24px) 14px 14px;
+}
+/* Costura da contracapa — espelhada (lado DIREITO em vez de esquerdo) */
+.book-cover--back::after {
+  /* Espelha left→right e os 24px iniciais das costuras horizontais.
+     O gradiente vertical da lombada principal precisa ser espelhado
+     (right edge) e o offset horizontal das costuras topo/base também. */
+  left: auto;
+  right: 12px;
+  background:
+    linear-gradient(to left,
+      transparent 0,
+      transparent 24px,
+      #e85d04 24px, #e85d04 26px,
+      transparent 26px, transparent 30px,
+      #e85d04 30px, #e85d04 32px,
+      transparent 32px, transparent 100%),
+    linear-gradient(to left,
+      transparent 0,
+      transparent 24px,
+      #e85d04 24px, #e85d04 26px,
+      transparent 26px, transparent 30px,
+      #e85d04 30px, #e85d04 32px,
+      transparent 32px, transparent 100%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      #e85d04 3px,
+      #e85d04 5px
+    );
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: 100% 10px, 100% 10px, 100% 100%;
+  background-position: top, bottom, 0 0;
+}
+/* Lista de info da loja (endereço, whatsapp, horário) na contracapa.
+   Texto claro pra contrastar com o couro preto. */
+.book-back-cover__info {
+  list-style: none;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+  width: 100%;
+  max-width: 320px;
+}
+.book-back-cover__info li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.35;
+}
+.book-back-cover__info li svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--color-secondary);
+  margin-top: 2px;
+}
+.book-back-cover__info li strong {
+  color: var(--color-secondary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1px;
+}
+
+/* === Contracapa === */
+/* A contracapa agora usa a classe .book-cover--back (espelho da capa
+   com costura à direita). O bloco antigo .book-back-cover foi removido
+   por não ser mais usado — ver .book-cover--back acima. */
+
+/* === Índice (página 2) === */
+.menu-toc {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Gap do sumário reduzido — lista mais densa pro livro menor. */
+  gap: 0.2rem;
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu-toc__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-ink);
+  /* Padding vertical do item do sumário reduzido. */
+  padding: 0.28rem 0;
+  border-bottom: 1px dotted var(--color-line);
+  cursor: pointer;
+  background: none;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  text-align: left;
+  width: 100%;
+  font-family: var(--font-body);
+  transition: color var(--transition-fast), padding var(--transition-fast);
+}
+.menu-toc__item:hover {
+  color: var(--color-primary);
+  padding-left: 0.4rem;
+}
+.menu-toc__item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.menu-toc__num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  width: 1.5rem;
+  font-size: 0.9rem;
+}
+.menu-toc__name {
+  flex: 1;
+  font-weight: 500;
+}
+.menu-toc__dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--color-line);
+  margin: 0 0.4rem;
+  transform: translateY(-3px);
+  min-width: 1rem;
+}
+.menu-toc__page {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  font-size: 0.82rem;
+}
+
+/* === Navegação externa do livro (setas + indicador) === */
+.book-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 1000px;
+  margin-top: var(--space-3);
+  padding: 0 var(--space-3);
+}
+.book-nav__btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.book-nav__btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.book-nav__btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+.book-nav__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.book-nav__btn svg { width: 18px; height: 18px; }
+.book-nav__indicator {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 110px;
+  justify-content: center;
+}
+.book-nav__indicator strong {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 1rem;
+}
+
+/* Hint de teclado (pequeno, discreto) */
+.book-nav__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  background: var(--color-paper);
+}
+@media (max-width: 700px) {
+  .book-nav__hint { display: none; }
+}
+
+/* === CTA final (chamar no WhatsApp) — fora do livro === */
+.menu-cta {
+  text-align: center;
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-paper);
+  border-radius: var(--radius-lg);
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 0 0 6px rgba(184, 30, 30, 0.08);
+  max-width: 720px;
+  width: 100%;
+}
+.menu-cta p {
+  font-size: var(--fs-md);
+  color: var(--color-ink-soft);
+  margin-bottom: var(--space-4);
+}
+.menu-cta strong { color: var(--color-ink); }
+
+/* === Empty / loading state === */
+.menu-loading {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+/* === Imagens de capa da contracapa (decoração) === */
+/* (removido — a contracapa agora é .book-cover--back, sem imagem de
+   fundo; o couro + textura cobrem toda a superfície) */
+
+/* === CAPA / CONTRACAPA: página dura ===
+   As capas (frontal e traseira) precisam se comportar como CAPA DURA
+   do livro: sem padding, sem background claro de "folha", sem box-shadow
+   de linha central (a lombada é a da capa em si, não das folhas).
+
+   Como a StPageFlip sempre renderiza UMA página por wrapper .stf__item,
+   e nossas capas vivem em .book-page > .book-cover (.book-cover--back),
+   a gente "esmaga" a .book-page em torno do cover quando o cover é
+   detectado via :has() (suportado nos navegadores modernos).
+
+   E removemos o box-shadow de linha central do .stf__item quando a
+   página é uma capa (a lombada da capa já tem sua própria sombra). */
+.book-page:has(.book-cover--back),
+.book-page:has(.book-cover):not(:has(.book-cover--back)) {
+  background: #0c0a09;
+  background-image: none;
+  box-shadow: none;
+  padding: 0;
+  border: 0;
+}
+.stf__item.--right:has(.book-cover--back),
+.stf__item.--left:has(.book-cover):not(:has(.book-cover--back)) {
+  box-shadow: none;
+}

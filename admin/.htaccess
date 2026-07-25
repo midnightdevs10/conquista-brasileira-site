@@ -1,0 +1,16 @@
+# Defense in depth: rejeita requests que não venham de localhost
+# na camada do Apache. O PHP também tem guard em includes/guard.php.
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(php)$">
+    Require local
+  </FilesMatch>
+</IfModule>
+
+# Impede listagem de diretório
+Options -Indexes
+
+# Bloqueia acesso direto ao includes/ (já tratado pelo .htaccess de lá,
+# mas reforça caso o de includes/ seja sobrescrito)
+<FilesMatch "\.(json|md|log)$">
+  Require all denied
+</FilesMatch>

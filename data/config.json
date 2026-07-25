@@ -1,0 +1,1475 @@
+{
+    "company": {
+        "name": "Conquista Brasileira Pastelaria",
+        "shortName": "Conquista Brasileira",
+        "tagline": "Os Melhores Pastéis de Cajamar",
+        "subtitle": "Tradição, sabor e atendimento de família desde a primeira mordida. Pastéis artesanais feitos com ingredientes selecionados, prontos para viagem ou para saborear no nosso espaço.",
+        "description": "Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.",
+        "foundedYear": null,
+        "city": "Cajamar",
+        "state": "SP",
+        "address": "Av. Ten. Marques, 1077 - Polvilho, Cajamar - SP, 07793-450",
+        "addressShort": "Av. Ten. Marques, 1077 - Polvilho",
+        "neighborhood": "Polvilho",
+        "zipCode": "07793-450",
+        "phone": "(11) 96380-5855",
+        "whatsapp": "5511963805855",
+        "whatsappDisplay": "(11) 96380-5855",
+        "email": "contato@conquistabrasileira.com.br",
+        "instagram": "https://instagram.com/conquista.brasileira",
+        "facebook": "",
+        "googleMaps": {
+            "lat": -23.4103,
+            "lng": -46.8916
+        }
+    },
+    "hours": [
+        {
+            "day": "Segunda-feira",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Terça-feira",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Quarta-feira",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Quinta-feira",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Sexta-feira",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Sábado",
+            "open": "07:00",
+            "close": "22:30",
+            "isClosed": false
+        },
+        {
+            "day": "Domingo",
+            "open": "07:00",
+            "close": "15:00",
+            "isClosed": false
+        }
+    ],
+    "services": [
+        {
+            "icon": "store",
+            "image": "assets/images/sexta-conquista.jpg",
+            "title": "Consumo no Local",
+            "description": "Espaço acolhedor e familiar para saborear seu pastel quentinho, com ambiente agradável e atendimento atencioso."
+        },
+        {
+            "icon": "bag",
+            "image": "assets/images/quarta-almoco.jpg",
+            "title": "Retirada no Local",
+            "description": "Faça seu pedido por WhatsApp e retire sem filas. Seu pastel pronto na hora marcada, sem espera."
+        },
+        {
+            "icon": "bike",
+            "image": "assets/images/conjunto.png",
+            "title": "Delivery",
+            "description": "Receba no conforto da sua casa. Entrega rápida em toda a região de Cajamar com pastéis sempre fresquinhos."
+        },
+        {
+            "icon": "gift",
+            "image": "assets/images/mini-pasteis.jpg",
+            "title": "Encomendas",
+            "description": "Pastéis especiais em grande quantidade para sua reunião, aniversário ou ocasião especial."
+        },
+        {
+            "icon": "briefcase",
+            "image": "assets/images/marmitex.png",
+            "title": "Contrato com Empresas",
+            "description": "Atendemos empresas com café da manhã, almoço, jantar e marmitex. Planos diários, semanais ou mensais para sua equipe."
+        },
+        {
+            "icon": "coffee",
+            "image": "assets/images/mini-pasteis.jpg",
+            "title": "Coffee-Break",
+            "description": "Coffee-break completo para reuniões, treinamentos e eventos corporativos. Pastéis, mini salgados, doces e bebidas."
+        },
+        {
+            "icon": "cake",
+            "image": "assets/images/copa.svg",
+            "title": "Aniversários",
+            "description": "Monte a festa com a gente: pastéis, mini salgados e doces para surpreender os convidados do aniversariante."
+        },
+        {
+            "icon": "party",
+            "image": "assets/images/copa.svg",
+            "title": "Confraternizações",
+            "description": "Encontros de família, fim de ano, confraternização da empresa: a gente prepara tudo com carinho e qualidade."
+        }
+    ],
+    "differentials": [
+        {
+            "icon": "leaf",
+            "title": "Ingredientes Selecionados",
+            "description": "Trabalhamos somente com ingredientes frescos e de qualidade, selecionados diariamente para garantir o melhor sabor."
+        },
+        {
+            "icon": "clock",
+            "title": "Atendimento Rápido",
+            "description": "Seu pedido é preparado com agilidade sem abrir mão da qualidade. Pediu, prontinho em minutos."
+        },
+        {
+            "icon": "heart",
+            "title": "Ambiente Familiar",
+            "description": "Um espaço pensado para receber bem toda a família, com clima acolhedor e atendimento de casa."
+        },
+        {
+            "icon": "award",
+            "title": "Tradição e Qualidade",
+            "description": "Receita de pastel que carrega história e sabor. A massa crocante e o recheio generoso são a nossa marca."
+        },
+        {
+            "icon": "tag",
+            "title": "Preço Acessível",
+            "description": "Sabor e qualidade que cabem no bolso. Pastéis com recheio generoso e preço justo para toda a família."
+        },
+        {
+            "icon": "shopping-bag",
+            "title": "Retirada Prática",
+            "description": "Pediu pelo WhatsApp? Retira no balcão sem fila, no horário combinado, sem complicação."
+        }
+    ],
+    "menu": {
+        "groups": [
+            {
+                "id": "pasteis",
+                "name": "Pastéis",
+                "subgroups": [
+                    {
+                        "id": "tradicionais",
+                        "name": "Tradicionais",
+                        "items": [
+                            {
+                                "name": "Carne"
+                            },
+                            {
+                                "name": "Palmito"
+                            },
+                            {
+                                "name": "Pizza"
+                            },
+                            {
+                                "name": "Queijo"
+                            },
+                            {
+                                "name": "Frango"
+                            },
+                            {
+                                "name": "Calabresa",
+                                "tag": ""
+                            }
+                        ]
+                    },
+                    {
+                        "id": "especiais-1",
+                        "name": "Especiais N°1",
+                        "items": [
+                            {
+                                "name": "Bauru"
+                            },
+                            {
+                                "name": "Carne com Ovo"
+                            },
+                            {
+                                "name": "Carne com Queijo"
+                            },
+                            {
+                                "name": "Carne com Azeitona"
+                            },
+                            {
+                                "name": "Presunto com Catupiry"
+                            },
+                            {
+                                "name": "Presunto com Queijo"
+                            },
+                            {
+                                "name": "À Moda 1",
+                                "description": "Carne, ovo e queijo"
+                            },
+                            {
+                                "name": "Pastel Árabe",
+                                "description": "Carne, cebola, hortelã, azeitona e limão"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "especiais-2",
+                        "name": "Especiais N°2",
+                        "items": [
+                            {
+                                "name": "Carne com Catupiry"
+                            },
+                            {
+                                "name": "Calabresa Temperada"
+                            },
+                            {
+                                "name": "Calabresa com 2 Queijos"
+                            },
+                            {
+                                "name": "Calabresa com Queijo e Cebola"
+                            },
+                            {
+                                "name": "Calabresa com Queijo"
+                            },
+                            {
+                                "name": "Calabresa com Provolone e Milho"
+                            },
+                            {
+                                "name": "Escarola com Bacon"
+                            },
+                            {
+                                "name": "Frango com Catupiry"
+                            },
+                            {
+                                "name": "Frango com Catupiry e Milho"
+                            },
+                            {
+                                "name": "Lombo com Catupiry"
+                            },
+                            {
+                                "name": "Lombo com Queijo"
+                            },
+                            {
+                                "name": "Lombo com 2 Queijos"
+                            },
+                            {
+                                "name": "Quatro Queijos"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "especiais-3",
+                        "name": "Especiais N°3",
+                        "items": [
+                            {
+                                "name": "À Moda com Bacon",
+                                "description": "Carne, presunto, tomate, ovo, queijo e bacon"
+                            },
+                            {
+                                "name": "Portuguesa",
+                                "description": "Presunto, queijo, ovo, orégano, ervilha e cebola"
+                            },
+                            {
+                                "name": "Frango com Queijo e Bacon"
+                            },
+                            {
+                                "name": "Frango com Queijo"
+                            },
+                            {
+                                "name": "Peito de Peru com Queijo"
+                            },
+                            {
+                                "name": "Peito de Peru com 2 Queijos"
+                            },
+                            {
+                                "name": "Presunto com Provolone e Milho"
+                            },
+                            {
+                                "name": "Atum com Catupiry"
+                            },
+                            {
+                                "name": "Atum com Queijo"
+                            },
+                            {
+                                "name": "Atum com 2 Queijos"
+                            },
+                            {
+                                "name": "À Moda com Catupiry",
+                                "description": "Carne, presunto, tomate, ovo, queijo e catupiry"
+                            },
+                            {
+                                "name": "Presunto com Queijo e Ovo"
+                            },
+                            {
+                                "name": "Presunto com 2 Queijos"
+                            },
+                            {
+                                "name": "Peito de Peru com Catupiry"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "especiais-4",
+                        "name": "Especiais N°4",
+                        "items": [
+                            {
+                                "name": "Bacalhau"
+                            },
+                            {
+                                "name": "Bacalhau com Carne Seca"
+                            },
+                            {
+                                "name": "Carne Seca com Queijo"
+                            },
+                            {
+                                "name": "Carne Seca com Catupiry"
+                            },
+                            {
+                                "name": "Salame com Queijo"
+                            },
+                            {
+                                "name": "Salame com 2 Queijos"
+                            },
+                            {
+                                "name": "Camarão com Catupiry"
+                            },
+                            {
+                                "name": "Camarão com Palmito"
+                            },
+                            {
+                                "name": "Camarão com Escarola"
+                            },
+                            {
+                                "name": "Camarão com Palmito e Escarola"
+                            },
+                            {
+                                "name": "Camarão com Ervilha"
+                            },
+                            {
+                                "name": "Camarão com Queijo"
+                            },
+                            {
+                                "name": "Camarão"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "doces",
+                        "name": "Doces",
+                        "items": [
+                            {
+                                "name": "Banana"
+                            },
+                            {
+                                "name": "Banana com Chocolate"
+                            },
+                            {
+                                "name": "Banana com Doce de Leite"
+                            },
+                            {
+                                "name": "Romeu e Julieta"
+                            },
+                            {
+                                "name": "Chocolate"
+                            },
+                            {
+                                "name": "Doce de Leite"
+                            },
+                            {
+                                "name": "Morango com Chocolate"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Os clássicos que todo mundo ama — massa crocante e recheio generoso."
+            },
+            {
+                "id": "salgados",
+                "name": "Salgados",
+                "subgroups": [
+                    {
+                        "id": "lista",
+                        "name": "Salgados Fritos",
+                        "items": [
+                            {
+                                "name": "Kibe"
+                            },
+                            {
+                                "name": "Kibe com Queijo"
+                            },
+                            {
+                                "name": "Coxinha"
+                            },
+                            {
+                                "name": "Bolinho de Carne"
+                            },
+                            {
+                                "name": "Esfiha de Bauru"
+                            },
+                            {
+                                "name": "Esfiha de Calabresa"
+                            },
+                            {
+                                "name": "Esfiha de Hambúrguer"
+                            },
+                            {
+                                "name": "Esfiha de Calabresa com Catupiry"
+                            },
+                            {
+                                "name": "Esfiha de Frango com Catupiry"
+                            },
+                            {
+                                "name": "Esfiha de Carne Seca com Queijo"
+                            },
+                            {
+                                "name": "Esfiha de Carne com Queijo"
+                            },
+                            {
+                                "name": "Esfiha de Carne"
+                            },
+                            {
+                                "name": "Esfiha de Escarola com Queijo"
+                            },
+                            {
+                                "name": "Esfiha 4 Queijos"
+                            },
+                            {
+                                "name": "Esfiha Portuguesa"
+                            },
+                            {
+                                "name": "Risólis de Queijo"
+                            },
+                            {
+                                "name": "Risólis de Presunto com Queijo"
+                            },
+                            {
+                                "name": "Bolinho de Carne com Ovo"
+                            },
+                            {
+                                "name": "Bolinho de Salsicha"
+                            },
+                            {
+                                "name": "Coxinha com Catupiry"
+                            },
+                            {
+                                "name": "Torta de Banana"
+                            },
+                            {
+                                "name": "Empada de Frango com Catupiry"
+                            },
+                            {
+                                "name": "Empada de Palmito"
+                            },
+                            {
+                                "name": "Fogazza de Carne com Queijo"
+                            },
+                            {
+                                "name": "Fogazza de Frango com Catupiry"
+                            },
+                            {
+                                "name": "Fogazza de Presunto com Queijo"
+                            },
+                            {
+                                "name": "Espetinho de Frango"
+                            },
+                            {
+                                "name": "Espetinho de Bacalhau"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Salgados fritos na hora, com recheio generoso."
+            },
+            {
+                "id": "mini",
+                "name": "Mini Salgados",
+                "subgroups": [
+                    {
+                        "id": "pronta-entrega",
+                        "name": "Pronta Entrega",
+                        "items": [
+                            {
+                                "name": "Coxinha"
+                            },
+                            {
+                                "name": "Bolinho de Queijo"
+                            },
+                            {
+                                "name": "Kibe"
+                            },
+                            {
+                                "name": "Risólis"
+                            },
+                            {
+                                "name": "Bolinho de Carne"
+                            },
+                            {
+                                "name": "Esfiha de Carne"
+                            },
+                            {
+                                "name": "Enroladinho de Salsicha"
+                            },
+                            {
+                                "name": "Empada de Frango com Catupiry"
+                            },
+                            {
+                                "name": "Empada de Palmito"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sob-encomenda",
+                        "name": "Sob Encomenda",
+                        "items": [
+                            {
+                                "name": "Esfiha de Frango com Catupiry"
+                            },
+                            {
+                                "name": "Esfiha de Bauru"
+                            },
+                            {
+                                "name": "Esfiha de Atum"
+                            },
+                            {
+                                "name": "Esfiha 4 Queijos"
+                            },
+                            {
+                                "name": "Esfiha de Calabresa"
+                            },
+                            {
+                                "name": "Esfiha de Calabresa com Catupiry"
+                            },
+                            {
+                                "name": "Esfiha de Carne com Queijo"
+                            },
+                            {
+                                "name": "Esfiha de Carne Seca"
+                            },
+                            {
+                                "name": "Esfiha de Camarão"
+                            },
+                            {
+                                "name": "Empada de Camarão"
+                            },
+                            {
+                                "name": "Empada de Carne Seca"
+                            },
+                            {
+                                "name": "Empada de Chocolate"
+                            },
+                            {
+                                "name": "Empada de Doce de Leite"
+                            },
+                            {
+                                "name": "Empada de Escarola"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "mini-pasteis-salgados",
+                        "name": "Mini Pastéis Salgados",
+                        "items": [
+                            {
+                                "name": "Carne"
+                            },
+                            {
+                                "name": "Queijo"
+                            },
+                            {
+                                "name": "Palmito"
+                            },
+                            {
+                                "name": "Frango com Catupiry"
+                            },
+                            {
+                                "name": "Camarão"
+                            },
+                            {
+                                "name": "Carne Seca"
+                            },
+                            {
+                                "name": "Atum Temperado"
+                            },
+                            {
+                                "name": "Bacalhau"
+                            },
+                            {
+                                "name": "Calabresa"
+                            },
+                            {
+                                "name": "Cheddar"
+                            },
+                            {
+                                "name": "Escarola"
+                            },
+                            {
+                                "name": "Brócolis"
+                            },
+                            {
+                                "name": "Carne com Queijo"
+                            },
+                            {
+                                "name": "Presunto e Queijo"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "mini-pasteis-doces",
+                        "name": "Mini Pastéis Doces",
+                        "items": [
+                            {
+                                "name": "Chocolate"
+                            },
+                            {
+                                "name": "Banana"
+                            },
+                            {
+                                "name": "Banana com Chocolate"
+                            },
+                            {
+                                "name": "Romeu e Julieta"
+                            },
+                            {
+                                "name": "Nutella"
+                            },
+                            {
+                                "name": "Doce de Leite"
+                            },
+                            {
+                                "name": "Nutella com Morango"
+                            },
+                            {
+                                "name": "Morango com Chocolate"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "combos",
+                        "name": "Combos",
+                        "items": [
+                            {
+                                "name": "Combo 1",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Dolly guaraná",
+                                    "20 salgados mistos",
+                                    "1 sobremesa"
+                                ]
+                            },
+                            {
+                                "name": "Combo 2",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Coca-Cola 2L",
+                                    "50 salgados mistos",
+                                    "2 sobremesas"
+                                ]
+                            },
+                            {
+                                "name": "Combo 3",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Coca-Cola 2L",
+                                    "100 salgados mistos",
+                                    "2 sobremesas"
+                                ]
+                            },
+                            {
+                                "name": "Combo 4",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Sukita laranja 2L",
+                                    "30 pastéis mistos",
+                                    "1 sobremesa"
+                                ]
+                            },
+                            {
+                                "name": "Combo 5",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Guaraná 1,5L",
+                                    "20 pastéis mistos",
+                                    "20 salgados mistos",
+                                    "1 sobremesa"
+                                ]
+                            },
+                            {
+                                "name": "Combo 6",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Coca-Cola 2L",
+                                    "100 pastéis mistos",
+                                    "2 sobremesas"
+                                ]
+                            },
+                            {
+                                "name": "Combo 7",
+                                "tag": "combo",
+                                "includes": [
+                                    "1 Coca-Cola 1L",
+                                    "10 pastéis de carne",
+                                    "10 coxinhas",
+                                    "1 sobremesa"
+                                ]
+                            },
+                            {
+                                "name": "Combo Espeto de Frango",
+                                "tag": "combo",
+                                "includes": [
+                                    "5 espetos de frango",
+                                    "1 Coca-Cola 2L"
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "description": "Mini pastéis e salgados perfeitos para festas, reuniões e coffee-break."
+            },
+            {
+                "id": "sucos",
+                "name": "Sucos",
+                "subgroups": [
+                    {
+                        "id": "400ml",
+                        "name": "400ml",
+                        "items": [
+                            {
+                                "name": "Laranja",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Abacaxi",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Limão",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Polpa com Água",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Polpa com Leite",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Açaí com Água"
+                            },
+                            {
+                                "name": "Açaí com Leite"
+                            },
+                            {
+                                "name": "Caldo de Cana",
+                                "description": "Natural, gelado, na medida"
+                            },
+                            {
+                                "name": "Caldo de Cana com Fruta"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "500ml",
+                        "name": "500ml",
+                        "items": [
+                            {
+                                "name": "Laranja",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Abacaxi",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Limão",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Polpa com Água",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Polpa com Leite",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Açaí com Água"
+                            },
+                            {
+                                "name": "Açaí com Leite"
+                            },
+                            {
+                                "name": "Caldo de Cana",
+                                "description": "Natural, gelado, na medida"
+                            },
+                            {
+                                "name": "Caldo de Cana com Fruta"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "1l",
+                        "name": "1 Litro",
+                        "items": [
+                            {
+                                "name": "Laranja",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Abacaxi",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Limão",
+                                "description": "Natural, espremido na hora"
+                            },
+                            {
+                                "name": "Polpa com Água",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Polpa com Leite",
+                                "description": "Diversos sabores de polpa"
+                            },
+                            {
+                                "name": "Açaí com Água"
+                            },
+                            {
+                                "name": "Açaí com Leite"
+                            },
+                            {
+                                "name": "Caldo de Cana",
+                                "description": "Natural, gelado, na medida"
+                            },
+                            {
+                                "name": "Caldo de Cana com Fruta"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Sucos naturais, polpa, açaí e caldo de cana. Escolha o tamanho."
+            },
+            {
+                "id": "bebidas",
+                "name": "Bebidas",
+                "subgroups": [
+                    {
+                        "id": "coca-cola",
+                        "name": "Coca-Cola",
+                        "items": [
+                            {
+                                "name": "Coca-Cola 2L"
+                            },
+                            {
+                                "name": "Coca-Cola 2,5L"
+                            },
+                            {
+                                "name": "Coca-Cola KS"
+                            },
+                            {
+                                "name": "Coca-Cola Caçulinha"
+                            },
+                            {
+                                "name": "Coca-Cola Lata 350ml"
+                            },
+                            {
+                                "name": "Coca-Cola 1L"
+                            },
+                            {
+                                "name": "Coca-Cola 600ml"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "refrigerantes",
+                        "name": "Refrigerantes Sabores",
+                        "items": [
+                            {
+                                "name": "Refrigerante 2L",
+                                "description": "Diversos sabores: Guaraná, Sprite, Fanta, etc."
+                            },
+                            {
+                                "name": "Refrigerante 600ml",
+                                "description": "Diversos sabores"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "h2o",
+                        "name": "H2O",
+                        "items": [
+                            {
+                                "name": "H2O 500ml"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "agua",
+                        "name": "Água",
+                        "items": [
+                            {
+                                "name": "Água com Gás 500ml"
+                            },
+                            {
+                                "name": "Água sem Gás 500ml"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "dolly",
+                        "name": "Dolly",
+                        "items": [
+                            {
+                                "name": "Dolly 2L",
+                                "description": "Diversos sabores"
+                            },
+                            {
+                                "name": "Dolly Caçulinha"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "cerveja",
+                        "name": "Cerveja",
+                        "items": [
+                            {
+                                "name": "Cerveja Lata 350ml"
+                            },
+                            {
+                                "name": "Cerveja Latão"
+                            },
+                            {
+                                "name": "Cerveja Long Neck"
+                            },
+                            {
+                                "name": "Cerveja Garrafa 600ml"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Refrigerantes, água e cervejas geladas."
+            },
+            {
+                "id": "lanches",
+                "name": "Lanches",
+                "subgroups": [
+                    {
+                        "id": "baguete",
+                        "name": "Baguetes",
+                        "items": [
+                            {
+                                "name": "X-Frango",
+                                "description": "Filé de frango, queijo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Frango com Bacon",
+                                "description": "Filé de frango, queijo, bacon, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Frango com Purê",
+                                "description": "Filé de frango, queijo, purê, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Frango com Catupiry",
+                                "description": "Filé de frango, queijo, catupiry, salada e maionese"
+                            },
+                            {
+                                "name": "X-Frango com Cheddar",
+                                "description": "Filé de frango, queijo, cheddar, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Calabresa",
+                                "description": "Calabresa, queijo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Calabresa com Vinagrete",
+                                "description": "Calabresa, queijo, vinagrete e maionese"
+                            },
+                            {
+                                "name": "X-Calabresa Acebolado",
+                                "description": "Calabresa, queijo, cebola e maionese"
+                            },
+                            {
+                                "name": "X-Contra Filé",
+                                "description": "Contra filé, queijo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Contra Filé com Bacon",
+                                "description": "Contra filé, queijo, bacon, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Contra Filé com Vinagrete",
+                                "description": "Contra filé, queijo, vinagrete e maionese"
+                            },
+                            {
+                                "name": "X-Contra Filé Acebolado",
+                                "description": "Contra filé, queijo, cebola e maionese"
+                            },
+                            {
+                                "name": "X-Salame",
+                                "description": "Salame, queijo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Salame com Purê",
+                                "description": "Salame, queijo, purê, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Salame com Cheddar",
+                                "description": "Salame, queijo, cheddar, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Salame com Catupiry",
+                                "description": "Salame, queijo, catupiry, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Salame com Ovo",
+                                "description": "Salame, queijo, ovo, alface, tomate e maionese"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "tradicionais",
+                        "name": "Tradicionais",
+                        "items": [
+                            {
+                                "name": "Americano",
+                                "description": "Pão francês, presunto, queijo, ovo, alface e tomate"
+                            },
+                            {
+                                "name": "Bauru",
+                                "description": "Pão francês, presunto, queijo, tomate e orégano"
+                            },
+                            {
+                                "name": "Queijo Quente",
+                                "description": "Pão francês e queijo"
+                            },
+                            {
+                                "name": "Misto Quente",
+                                "description": "Pão francês, presunto e queijo"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "hamburguer",
+                        "name": "Com Hambúrguer",
+                        "items": [
+                            {
+                                "name": "Hambúrguer",
+                                "description": "Hambúrguer e maionese"
+                            },
+                            {
+                                "name": "X-Burguer",
+                                "description": "Hambúrguer e queijo"
+                            },
+                            {
+                                "name": "X-Maionese",
+                                "description": "Hambúrguer, queijo e maionese"
+                            },
+                            {
+                                "name": "X-Salada",
+                                "description": "Hambúrguer, queijo, salada e maionese"
+                            },
+                            {
+                                "name": "X-Catupiry",
+                                "description": "Hambúrguer, queijo, catupiry, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Cheddar",
+                                "description": "Hambúrguer, queijo, cheddar, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Egg Salada",
+                                "description": "Hambúrguer, queijo, ovo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Egg Duplo",
+                                "description": "2 hambúrgueres, queijo, ovo, alface, tomate e maionese"
+                            },
+                            {
+                                "name": "X-Bacon",
+                                "description": "Hambúrguer, queijo, bacon e maionese"
+                            },
+                            {
+                                "name": "X-Tudo",
+                                "description": "2 hambúrgueres, queijo, bacon, catupiry, presunto, calabresa, ovo, alface, tomate e maionese"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "naturais",
+                        "name": "Naturais",
+                        "items": [
+                            {
+                                "name": "Queijo Branco",
+                                "description": "Pão integral, queijo branco, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Frango",
+                                "description": "Pão integral, frango, azeitona, cenoura, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Atum",
+                                "description": "Pão integral, atum, azeitona, cenoura, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Frios",
+                                "description": "Pão integral, queijo, presunto, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Salame",
+                                "description": "Pão integral, queijo, salame, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Peito de Peru",
+                                "description": "Pão integral, queijo, peito de peru, maionese, alface e tomate"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Baguetes, tradicionais, hambúrgueres e naturais."
+            },
+            {
+                "id": "beirutes",
+                "name": "Beirutes",
+                "subgroups": [
+                    {
+                        "id": "lista",
+                        "name": "Beirutes",
+                        "items": [
+                            {
+                                "name": "Presunto",
+                                "description": "Presunto, queijo, 2 ovos, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Peito de Peru",
+                                "description": "Peito de peru, queijo, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Calabresa",
+                                "description": "Calabresa, queijo, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Salame",
+                                "description": "Salame, queijo, 2 ovos, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Contra-Filé",
+                                "description": "Contra filé, queijo, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Frango",
+                                "description": "Filé de frango, queijo, catupiry, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Contra-Filé Especial",
+                                "description": "2 pães sírios, contra filé, presunto, bacon, queijo, 2 ovos, maionese, salada e fritas"
+                            },
+                            {
+                                "name": "Frango Especial",
+                                "description": "2 pães sírios, filé de frango, queijo, catupiry, 2 ovos, maionese, salada e fritas"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Beirutes fartos com salada e fritas."
+            },
+            {
+                "id": "hot-dogs",
+                "name": "Hot Dogs",
+                "subgroups": [
+                    {
+                        "id": "lista",
+                        "name": "Hot Dogs",
+                        "items": [
+                            {
+                                "name": "Dog Americano",
+                                "description": "Salsicha, ketchup, mostarda e maionese",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°1",
+                                "description": "Salsicha, ketchup, mostarda, maionese, ervilha, vinagrete e purê",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°2",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, catupiry e batata palha",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°3",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, catupiry e batata palha",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°5",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, cheddar e batata palha",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°6",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, frango desfiado e batata palha",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog Completo N°7",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, catupiry, bacon e batata palha",
+                                "tag": "Completo"
+                            },
+                            {
+                                "name": "Dog com Catupiry, Bacon e Cheddar",
+                                "description": "2 salsichas, ketchup, mostarda, maionese, milho, ervilha, vinagrete, purê, catupiry, cheddar, bacon e batata palha",
+                                "tag": "Completo"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Cachorro-quente completo, com ingredientes à sua escolha."
+            },
+            {
+                "id": "pao-de-metro",
+                "name": "Pão de Metro",
+                "subgroups": [
+                    {
+                        "id": "lista",
+                        "name": "Pão de Metro",
+                        "items": [
+                            {
+                                "name": "Queijo Branco",
+                                "description": "Pão integral, queijo branco, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Frango",
+                                "description": "Pão integral, frango, azeitona, cenoura, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Atum",
+                                "description": "Pão integral, atum, azeitona, cenoura, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Frios",
+                                "description": "Pão integral, queijo, presunto, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Salame",
+                                "description": "Pão integral, queijo, salame, maionese, alface e tomate"
+                            },
+                            {
+                                "name": "Peito de Peru",
+                                "description": "Pão integral, queijo, peito de peru, maionese, alface e tomate"
+                            }
+                        ]
+                    }
+                ],
+                "description": "Pão de metro com recheios generosos."
+            }
+        ]
+    },
+    "faq": [
+        {
+            "question": "Vocês fazem entrega?",
+            "answer": "Sim! Atendemos toda a região de Cajamar com delivery próprio, sempre mantendo a qualidade e o calor do pastel saindo da fritura. Para saber o valor e o tempo de entrega para o seu bairro, é só chamar no WhatsApp."
+        },
+        {
+            "question": "Aceitam cartão e Pix?",
+            "answer": "Sim, aceitamos cartão de crédito, débito e Pix, além de dinheiro. Para delivery e retirada, o pagamento é combinado direto pelo WhatsApp."
+        },
+        {
+            "question": "Tem estacionamento no local?",
+            "answer": "Sim, contamos com estacionamento próprio para clientes, com vagas fáceis e seguras para você vir retirar ou saborear aqui conosco."
+        },
+        {
+            "question": "Posso fazer encomendas para eventos?",
+            "answer": "Pode sim! Atendemos festas, confraternizações, eventos corporativos e reuniões familiares. Faça sua encomenda com pelo menos 24h de antecedência pelo WhatsApp."
+        },
+        {
+            "question": "Tem opções doces no cardápio?",
+            "answer": "Sim, temos uma linha completa de pastéis doces: chocolate, doce de leite, Romeu e Julieta, banana com canela, leite ninho e Nutella."
+        },
+        {
+            "question": "Qual o horário de funcionamento?",
+            "answer": "Atendemos de terça a domingo, com horários especiais para almoço (quarta e sexta) e jantar. Confira a aba 'Horário' para os detalhes do nosso funcionamento."
+        },
+        {
+            "question": "O pastel é feito na hora?",
+            "answer": "Sempre! Trabalhamos somente com produção sob demanda, para garantir massa crocante, recheio generoso e a temperatura certa na hora de servir."
+        },
+        {
+            "question": "Atendem com marmitex?",
+            "answer": "Sim, nas segundas e nos dias de semana oferecemos a opção de marmitex executiva com comida caseira. Consulte o cardápio do dia pelo WhatsApp."
+        }
+    ],
+    "gallery": [
+        {
+            "src": "assets/images/quarta-almoco.jpg",
+            "alt": "Quarta do almoço na Conquista Brasileira",
+            "caption": "Quarta do Almoço",
+            "description": "Prato feito, ambiente família e o pastel saindo na hora."
+        },
+        {
+            "src": "assets/images/sexta-conquista.jpg",
+            "alt": "Sexta da Conquista - nosso dia especial",
+            "caption": "Sexta da Conquista",
+            "description": "Nosso dia especial com promoções e aquele pastel diferente."
+        },
+        {
+            "src": "assets/images/mini-pasteis.jpg",
+            "alt": "Mini pastéis e salgados para suas festas",
+            "caption": "Mini Pastéis",
+            "description": "Perfeitos para festas, reuniões e coffee-break."
+        },
+        {
+            "src": "assets/images/marmitex.png",
+            "alt": "Marmitex executiva de segunda",
+            "caption": "Marmitex Executiva",
+            "description": "Comida caseira de segunda a sexta pra levar pra casa ou pro trabalho."
+        },
+        {
+            "src": "assets/images/conjunto.png",
+            "alt": "Conjunto de pratos da Conquista Brasileira",
+            "caption": "Nossos Pratos",
+            "description": "Combinações com pastel, bebida e acompanhamento."
+        },
+        {
+            "src": "assets/images/copa.svg",
+            "alt": "Logo decorativo Conquista Brasileira",
+            "caption": "Conquista Brasileira",
+            "description": "Tradição, sabor e atendimento de família desde a primeira mordida."
+        }
+    ],
+    "stats": [
+        {
+            "value": "+10",
+            "label": "anos de história"
+        },
+        {
+            "value": "30+",
+            "label": "tipos de pastéis"
+        },
+        {
+            "value": "5★",
+            "label": "avaliação média"
+        },
+        {
+            "value": "100%",
+            "label": "artesanal"
+        }
+    ],
+    "seo": {
+        "title": "Conquista Brasileira Pastelaria | Cajamar SP",
+        "description": "Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.",
+        "keywords": "pastelaria cajamar, pastel em cajamar, delivery cajamar, pastel brasileiro, pastelaria conquista brasileira",
+        "ogImage": "assets/images/conjunto.png",
+        "url": "https://conquistabrasileira.com.br",
+        "type": "restaurant",
+        "schema": {
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            "name": "Conquista Brasileira Pastelaria",
+            "image": "assets/images/conjunto.png",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Av. Ten. Marques, 1077",
+                "addressLocality": "Cajamar",
+                "addressRegion": "SP",
+                "postalCode": "07793-450",
+                "addressCountry": "BR"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": -23.4103,
+                "longitude": -46.8916
+            },
+            "telephone": "+55-11-96380-5855",
+            "priceRange": "$$",
+            "servesCuisine": "Pastelaria Brasileira",
+            "openingHoursSpecification": [
+                {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday"
+                    ],
+                    "opens": "07:00",
+                    "closes": "22:30"
+                },
+                {
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": "Sunday",
+                    "opens": "07:00",
+                    "closes": "15:00"
+                }
+            ]
+        }
+    },
+    "hero": {
+        "image": "/assets/images/conjunto.png",
+        "eyebrow": "Pastelaria Brasileira · Cajamar / SP",
+        "title": "Os",
+        "titleAccent": "Melhores Pastéis",
+        "titleSuffix": "de Cajamar",
+        "subtitle": "Tradição, sabor e atendimento de família desde a primeira mordida. Massa crocante, recheio generoso e ingredientes selecionados — prontos para viagem ou para saborear no nosso espaço.",
+        "floatingTag": {
+            "strong": "+30",
+            "label": "sabores"
+        },
+        "badges": [
+            {
+                "icon": "<svg class=\"hero-badge-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg>",
+                "text": "Massa Crocante"
+            },
+            {
+                "icon": "<svg class=\"hero-badge-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z\"/></svg>",
+                "text": "Recheio Generoso"
+            },
+            {
+                "icon": "<svg class=\"hero-badge-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"5.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"18.5\" cy=\"17.5\" r=\"3.5\"/><path d=\"M15 6h3l3 6\"/><path d=\"M5.5 17.5 9 9h3l3 4h3\"/></svg>",
+                "text": "Delivery Rápido"
+            },
+            {
+                "text": "Tradição de Familia",
+                "icon": "<svg class=\"hero-badge-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"7\"/><polyline points=\"8.21 13.89 7 23 12 20 17 23 15.79 13.88\"/></svg>"
+            }
+        ]
+    },
+    "about": {
+        "paragraphs": [
+            "A **Conquista Brasileira Pastelaria** nasceu em Cajamar com uma missão simples: fazer o pastel que a gente gostaria de encontrar — com massa crocante, recheio generoso e aquele sabor que lembra casa de avó.",
+            "Trabalhamos com ingredientes frescos, selecionados todo dia, e uma massa que é a nossa marca registrada. Seja no balcão, no delivery ou no nosso salão, o objetivo é o mesmo: *cuidar de cada pedido como se fosse para a nossa própria família*.",
+            "Aqui você encontra os clássicos que todo mundo ama, as receitas autorais da casa, opções doces irresistíveis, marmitex executiva de segunda a sexta e a nossa **Sexta da Conquista** — um dia especial que já virou tradição entre os clientes."
+        ],
+        "features": [
+            {
+                "title": "Receita autoral",
+                "description": "Massa e recheios próprios, desenvolvidos com técnica e capricho."
+            },
+            {
+                "title": "Feito na hora",
+                "description": "Produção sob demanda, sempre fresco, sempre quentinho."
+            },
+            {
+                "title": "Atendimento de casa",
+                "description": "Quem chega é recebido como família. Cliente é o nosso ingrediente principal."
+            }
+        ],
+        "sticker": {
+            "prefix": "desde",
+            "year": 2018,
+            "suffix": "Cajamar / SP"
+        },
+        "images": {
+            "main": {
+                "src": "assets/images/quarta-almoco.jpg",
+                "alt": "Almoço de quarta na Conquista Brasileira"
+            },
+            "sub": {
+                "src": "assets/images/sexta-conquista.jpg",
+                "alt": "Ambiente da Conquista Brasileira"
+            }
+        }
+    }
+}

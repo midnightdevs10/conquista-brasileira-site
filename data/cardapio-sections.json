@@ -1,0 +1,262 @@
+{
+    "version": 1,
+    "sections": [
+        {
+            "id": "pasteis-tradicionais",
+            "name": "Pastéis Tradicionais",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "tradicionais"
+                }
+            ],
+            "description": "Os clássicos que todo mundo ama — massa crocante e recheio generoso.",
+            "tag": "Mais pedidos"
+        },
+        {
+            "id": "pasteis-especiais-1",
+            "name": "Pastéis Especiais I",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "especiais-1"
+                }
+            ],
+            "description": "Combinações clássicas com um toque a mais."
+        },
+        {
+            "id": "pasteis-especiais-2",
+            "name": "Pastéis Especiais II",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "especiais-2"
+                }
+            ],
+            "description": "Calabresa, frango, lombo, escarola e mais."
+        },
+        {
+            "id": "pasteis-especiais-3",
+            "name": "Pastéis Especiais III",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "especiais-3"
+                }
+            ],
+            "description": "À moda, portuguesa, atum, peru — pra quem quer surpreender."
+        },
+        {
+            "id": "pasteis-especiais-4",
+            "name": "Pastéis Especiais IV",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "especiais-4"
+                }
+            ],
+            "description": "Camarão, bacalhau, carne seca, salame — os premium da casa."
+        },
+        {
+            "id": "pasteis-doces",
+            "name": "Pastéis Doces",
+            "source": [
+                {
+                    "gid": "pasteis",
+                    "sgid": "doces"
+                }
+            ],
+            "description": "Para fechar (ou começar) com chave de ouro."
+        },
+        {
+            "id": "mini-salgados",
+            "name": "Mini Salgados",
+            "source": [
+                {
+                    "gid": "mini",
+                    "sgid": "pronta-entrega"
+                },
+                {
+                    "gid": "mini",
+                    "sgid": "mini-pasteis-salgados"
+                }
+            ],
+            "description": "Pronta entrega e sob encomenda — perfeitos para festas e coffee-break.",
+            "split": true
+        },
+        {
+            "id": "mini-doces-combos",
+            "name": "Mini Doces & Combos",
+            "source": [
+                {
+                    "gid": "mini",
+                    "sgid": "mini-pasteis-doces"
+                },
+                {
+                    "gid": "mini",
+                    "sgid": "combos"
+                }
+            ],
+            "description": "Mini pastéis doces e combos para toda ocasião.",
+            "split": true
+        },
+        {
+            "id": "mini-encomendas",
+            "name": "Mini Sob Encomenda",
+            "source": [
+                {
+                    "gid": "mini",
+                    "sgid": "sob-encomenda"
+                }
+            ],
+            "description": "Esfihas, empadas e sabores especiais sob encomenda."
+        },
+        {
+            "id": "salgados",
+            "name": "Salgados Fritos",
+            "source": [
+                {
+                    "gid": "salgados",
+                    "sgid": "lista"
+                }
+            ],
+            "description": "Coxinha, kibe, esfiha, risólis, bolinho e muito mais."
+        },
+        {
+            "id": "sucos",
+            "name": "Sucos Naturais",
+            "source": [
+                {
+                    "gid": "sucos",
+                    "sgid": "400ml"
+                },
+                {
+                    "gid": "sucos",
+                    "sgid": "500ml"
+                }
+            ],
+            "description": "Espremidos na hora, polpa com água ou com leite, açaí e caldo de cana.",
+            "split": true
+        },
+        {
+            "id": "sucos-1l-refrigerantes",
+            "name": "Sucos 1L & Refrigerantes",
+            "source": [
+                {
+                    "gid": "sucos",
+                    "sgid": "1l"
+                },
+                {
+                    "gid": "bebidas",
+                    "sgid": "refrigerantes"
+                }
+            ],
+            "description": "Sucos no tamanho família e refrigerantes em 2L e 600ml.",
+            "split": true
+        },
+        {
+            "id": "coca-cola",
+            "name": "Coca-Cola",
+            "source": [
+                {
+                    "gid": "bebidas",
+                    "sgid": "coca-cola"
+                }
+            ],
+            "description": "Em todos os tamanhos — da caçulinha à 2,5L."
+        },
+        {
+            "id": "agua-h2o",
+            "name": "Água & H2O",
+            "source": [
+                {
+                    "gid": "bebidas",
+                    "sgid": "h2o"
+                },
+                {
+                    "gid": "bebidas",
+                    "sgid": "agua"
+                }
+            ],
+            "description": "Para acompanhar o pastel do começo ao fim.",
+            "split": true
+        },
+        {
+            "id": "dolly-cerveja",
+            "name": "Dolly & Cerveja",
+            "source": [
+                {
+                    "gid": "bebidas",
+                    "sgid": "dolly"
+                },
+                {
+                    "gid": "bebidas",
+                    "sgid": "cerveja"
+                }
+            ],
+            "description": "Dolly gelada nos sabores da casa e cervejas em lata, long neck e garrafa.",
+            "split": true
+        },
+        {
+            "id": "lanches-baguetes",
+            "name": "Lanches: Baguetes",
+            "source": [
+                {
+                    "gid": "lanches",
+                    "sgid": "baguete"
+                }
+            ],
+            "description": "Baguetes generosos com salada, queijo e o sabor que você quiser."
+        },
+        {
+            "id": "lanches-trad-hamburguer",
+            "name": "Lanches: Tradicionais & Hambúrguer",
+            "source": [
+                {
+                    "gid": "lanches",
+                    "sgid": "hamburguer"
+                }
+            ],
+            "description": "Americano, bauru, queijo quente, misto e a linha X.",
+            "split": true
+        },
+        {
+            "id": "lanches-naturais-beirutes",
+            "name": "Lanches: Naturais & Beirutes",
+            "source": [
+                {
+                    "gid": "lanches",
+                    "sgid": "naturais"
+                },
+                {
+                    "gid": "beirutes",
+                    "sgid": "lista"
+                }
+            ],
+            "description": "Lanches naturais no pão integral e beirutes fartos com fritas.",
+            "split": true
+        },
+        {
+            "id": "hot-dogs",
+            "name": "Hot Dogs",
+            "source": [
+                {
+                    "gid": "hot-dogs",
+                    "sgid": "lista"
+                }
+            ],
+            "description": "Cachorro-quente completo, com ingredientes à sua escolha."
+        },
+        {
+            "id": "pao-de-metro",
+            "name": "Pão de Metro",
+            "source": [
+                {
+                    "gid": "pao-de-metro",
+                    "sgid": "lista"
+                }
+            ],
+            "description": "Pão de metro com recheios generosos para a família toda."
+        }
+    ]
+}

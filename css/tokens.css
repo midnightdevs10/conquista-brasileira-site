@@ -1,0 +1,105 @@
+/* ================================================================
+   DESIGN TOKENS - Conquista Brasileira Pastelaria
+   Cores, tipografia, espaçamentos e sombras
+   ================================================================ */
+
+:root {
+  /* === Cores principais === */
+  /* Paleta: vermelho + amarelo + laranja, com base escura quente */
+  --color-primary: #B81E1E;          /* Vermelho tomate (CTA principal) */
+  --color-primary-dark: #8A1414;     /* Vermelho profundo (hover) */
+  --color-primary-soft: #E14B4B;     /* Vermelho claro (acentos) */
+
+  --color-secondary: #F2A516;        /* Amarelo mostarda (acentos) */
+  --color-secondary-dark: #C68410;
+  --color-secondary-soft: #F8C654;
+
+  --color-tertiary: #E85D04;         /* Laranja vibrante (sabor) */
+  --color-tertiary-dark: #B43D02;
+
+  --color-accent: #F2A516;           /* Atalho para amarelo */
+
+  /* === Bases === */
+  --color-cream: #FBF6EE;            /* Creme quente (fundo principal) */
+  --color-paper: #FFFFFF;            /* Branco puro (cartões) */
+  --color-ink: #1F1A17;              /* Marrom escuro (texto) */
+  --color-ink-soft: #4A413B;         /* Texto secundário */
+  --color-muted: #8B7E73;            /* Texto auxiliar */
+  --color-line: #ECE2D2;             /* Linhas/bordas suaves */
+
+  --color-dark: #1A130E;             /* Fundo escuro (footer) */
+  --color-dark-2: #251C16;           /* Camada secundária escura */
+
+  /* WhatsApp */
+  --color-whatsapp: #25D366;
+  --color-whatsapp-dark: #1DA851;
+
+  /* === Tipografia === */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-script: 'Pacifico', cursive;
+
+  --fs-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);
+  --fs-sm: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
+  --fs-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --fs-md: clamp(1.125rem, 1rem + 0.5vw, 1.3rem);
+  --fs-lg: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --fs-2xl: clamp(1.875rem, 1.4rem + 2vw, 2.75rem);
+  --fs-3xl: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
+  --fs-4xl: clamp(2.75rem, 1.8rem + 4vw, 4.5rem);
+  --fs-5xl: clamp(3.25rem, 2rem + 5.5vw, 5.75rem);
+
+  /* === Espaçamento (8pt) === */
+  --space-1: 0.25rem;   /* 4 */
+  --space-2: 0.5rem;    /* 8 */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+  --space-9: 6rem;      /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* === Espaçamento de seção (padding vertical padrão entre seções) ===
+     Usado em .section (base) e em todas as seções filhas. Padroniza o "respiro"
+     entre blocos de conteúdo. Ajuste aqui para mudar TODAS as seções de uma vez.
+     --section-spacing-sm: versão reduzida usada em telas pequenas (≤ 768px)
+     para evitar seções muito compridas em mobile. */
+  --section-spacing: var(--space-7);
+  --section-spacing-sm: var(--space-6);
+
+  /* === Layout === */
+  --container: 1200px;
+  --container-narrow: 820px;
+  --header-h: 84px;
+
+  /* === Bordas === */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* === Sombras === */
+  --shadow-sm: 0 2px 8px rgba(31, 26, 23, 0.06);
+  --shadow: 0 8px 24px rgba(31, 26, 23, 0.08);
+  --shadow-md: 0 14px 40px rgba(31, 26, 23, 0.12);
+  --shadow-lg: 0 24px 60px rgba(31, 26, 23, 0.18);
+  --shadow-red: 0 14px 40px rgba(184, 30, 30, 0.28);
+  --shadow-whatsapp: 0 14px 40px rgba(37, 211, 102, 0.32);
+
+  /* === Animações === */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition: 0.3s var(--ease-out);
+  --transition-fast: 0.18s var(--ease-out);
+
+  /* === Gradientes === */
+  --gradient-warm: linear-gradient(135deg, #B81E1E 0%, #E85D04 60%, #F2A516 100%);
+  --gradient-warm-soft: linear-gradient(135deg, #FBE4D2 0%, #FFF1D6 100%);
+  --gradient-dark: linear-gradient(180deg, #1A130E 0%, #2A1E16 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(26, 19, 14, 0.85) 0%, rgba(26, 19, 14, 0.55) 100%);
+}

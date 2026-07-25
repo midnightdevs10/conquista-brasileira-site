@@ -1,0 +1,202 @@
+/* ================================================================
+   RESPONSIVE - Conquista Brasileira Pastelaria
+   Mobile-first, breakpoints: 560, 768, 900, 1100
+   ================================================================ */
+
+/* === até 1100px === */
+@media (max-width: 1100px) {
+  .hero-floating {
+    max-width: 360px;
+    margin-top: var(--space-6);
+  }
+  .about-img-main, .about-img-sub { aspect-ratio: 16 / 11; }
+}
+
+/* === até 900px === */
+@media (max-width: 900px) {
+  :root { --header-h: 72px; }
+
+  .main-nav {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: var(--color-paper);
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4);
+    gap: var(--space-3);
+    border-top: 1px solid var(--color-line);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-150%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out), visibility 0.4s;
+    max-height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+  }
+  .main-nav.open { transform: translateY(0); opacity: 1; visibility: visible; }
+  .main-nav ul { flex-direction: column; align-items: stretch; gap: 0; }
+  .nav-link {
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius);
+    text-align: left;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .nav-link::after { display: none; }
+  .header-cta { width: 100%; justify-content: center; margin-top: var(--space-2); }
+  .menu-toggle { display: flex; }
+
+  .logo-sub { display: none; }
+  .logo img { width: 44px; height: 44px; }
+
+  .hero {
+    min-height: auto;
+    padding: calc(var(--header-h) + var(--space-6)) 0 var(--space-8);
+  }
+  /* Volta a coluna única no mobile */
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .hero-content > .hero-text-block { padding-left: 0; }
+  .hero-content > .hero-floating {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 360px;
+  }
+  .hero-floating {
+    max-width: 320px;
+    margin-top: var(--space-6);
+  }
+  .hero-scroll { display: none; }
+
+  .about-visual {
+    position: static;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    justify-content: flex-start; /* mobile: alinha no topo, sem centralizar */
+  }
+
+  .carousel { padding: 0 50px; }
+  .carousel-prev { left: 4px; }
+  .carousel-next { right: 4px; }
+}
+
+/* === até 768px === */
+@media (max-width: 768px) {
+  /* Padding de seção reduzido no mobile (mantém a padronização,
+     apenas com a versão "sm" da variável). */
+  .section { padding: var(--section-spacing-sm) 0; }
+
+  .hours-card { padding: var(--space-5); }
+  .hours-head { flex-direction: column; align-items: flex-start; }
+  .hours-badge { margin-left: 0; }
+  .hours-list li { font-size: var(--fs-sm); padding: var(--space-3) 0; }
+
+  .cta-final-card { padding: var(--space-6) var(--space-4); }
+
+  /* Carrossel mobile: 1 slide por vez, mais padding */
+  .carousel { padding: 0 44px; }
+
+  /* === Cardápio: ajustes no tablet === */
+  .book-page__inner { padding: 1rem 1.1rem; }
+  .menu-section-title { font-size: 1.05rem; }
+  .menu-section-lead { font-size: 0.7rem; }
+  .menu-flavor { padding: 0.32rem 0; }
+  .menu-flavor-name { font-size: 0.8rem; }
+  .menu-flavor-desc { font-size: 0.65rem; }
+}
+
+/* === até 600px (mobile) — mantém proporção paisagem, só encolhe === */
+@media (max-width: 600px) {
+  .carousel { padding: 0 36px; }
+  .carousel-btn { width: 36px; height: 36px; font-size: 1.3rem; }
+  .gallery-item { width: 320px; height: 190px; }
+  .service-card { width: 320px; height: 190px; }
+}
+
+/* === até 560px === */
+@media (max-width: 560px) {
+  .container { padding: 0 var(--space-4); }
+
+  .hero-title { font-size: clamp(2.25rem, 11vw, 3.5rem); }
+
+  /* No mobile os botões ficam 100% largura */
+  .btn-equal { width: 100%; min-width: 0; }
+
+  .btn-lg { padding: 1rem 1.5rem; }
+  .btn-xl { padding: 1.2rem 1.75rem; font-size: var(--fs-md); }
+
+  .differentials-grid { grid-template-columns: 1fr; }
+
+  .about-features { padding: var(--space-4); }
+  .about-visual { gap: var(--space-3); }
+  .about-img-main, .about-img-sub { aspect-ratio: 16 / 10; }
+
+  .hours-list li { flex-wrap: wrap; gap: 4px; }
+  .hours-list .day { flex-basis: 100%; }
+  .hours-list .time { flex-basis: 100%; }
+
+  /* Float buttons menores e mais juntos */
+  .whatsapp-float { width: 52px; height: 52px; right: 14px; bottom: 14px; }
+  .whatsapp-float svg { width: 26px; height: 26px; }
+  .instagram-float { width: 52px; height: 52px; right: 14px; bottom: 74px; /* 52 + 8 gap + 14 bottom */ }
+  .instagram-float svg { width: 26px; height: 26px; }
+
+  .lightbox-close, .lightbox-prev, .lightbox-next { width: 44px; height: 44px; font-size: 1.4rem; }
+
+  /* === Cardápio: ajustes no mobile === */
+  .book-cover__title { font-size: 1.6rem; }
+  .book-cover__tagline { font-size: 0.75rem; max-width: 240px; }
+  .book-cover__start { padding: 0.5rem 0.95rem; font-size: 0.72rem; }
+  .menu-section-title { font-size: 0.95rem; }
+  .menu-section-lead { font-size: 0.65rem; }
+  .menu-section-eyebrow { font-size: 0.55rem; letter-spacing: 0.18em; }
+  .menu-flavor { padding: 0.28rem 0; }
+  .menu-flavor-name { font-size: 0.78rem; }
+  .menu-flavor-desc { font-size: 0.6rem; }
+  .menu-flavor-tag { font-size: 0.5rem; padding: 0.1rem 0.35rem; }
+  .book-nav__btn { width: 42px; height: 42px; }
+  .book-nav__indicator { font-size: 0.78rem; min-width: 90px; }
+}
+
+/* === até 380px === */
+@media (max-width: 380px) {
+  .hero-cta { flex-direction: column; }
+  .hero-cta .btn { width: 100%; }
+}
+
+/* === Landscape / telas muito altas === */
+@media (min-height: 900px) {
+  .hero { min-height: 100vh; }
+}
+
+/* === prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .hero-title, .hero-subtitle, .hero-eyebrow,
+  .hero-cta, .hero-badges, .hero-floating {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .hero-floating img { animation: none; }
+  .hero-floating-tag { animation: none; }
+  .about-card-stamp { animation: none; }
+  .whatsapp-pulse { animation: none; }
+  .carousel-track { transition: none; }
+  /* Auto-scroll desativado por JS (initMarqueeScroll detecta prefers-reduced-motion).
+     Garante que qualquer heredado do keyframe não vaze. */
+  .marquee-track { animation: none !important; }
+}
+
+/* === Print === */
+@media print {
+  .site-header, .whatsapp-float, .instagram-float, .hero-floating,
+  .hero-scroll, .lightbox, .cta-final-card,
+  .carousel-btn, .carousel-dots { display: none !important; }
+  .hero { min-height: auto; background: #fff; color: #000; padding: 2rem 0; }
+  .hero-title, .hero-title .text-accent { color: #000; }
+}

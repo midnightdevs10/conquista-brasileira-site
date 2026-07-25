@@ -1,0 +1,94 @@
+/* ================================================================
+   TYPOGRAPHY - Conquista Brasileira Pastelaria
+   ================================================================ */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: 400;
+  color: var(--color-ink);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--fs-5xl); font-weight: 800; line-height: 1.05; }
+h2 { font-size: var(--fs-3xl); font-weight: 700; line-height: 1.1; }
+h3 { font-size: var(--fs-xl); font-weight: 700; line-height: 1.2; }
+h4 { font-size: var(--fs-lg); font-weight: 600; line-height: 1.3; }
+
+p { line-height: 1.7; }
+p + p { margin-top: var(--space-4); }
+
+.text-accent {
+  color: var(--color-primary);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-primary);
+  /* Espaço entre o eyebrow e o título (h2) que vem logo abaixo.
+     Aumentado de --space-4 (1.5rem) pra --space-5 (2.5rem) pra dar mais respiro
+     e melhorar a hierarquia visual entre as duas linhas. */
+  margin-bottom: var(--space-5);
+  position: relative;
+  padding-left: 32px;
+}
+
+.section-eyebrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.section-title {
+  font-size: var(--fs-3xl);
+  margin-bottom: var(--space-4);
+}
+
+.section-lead {
+  font-size: var(--fs-md);
+  color: var(--color-ink-soft);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section-head {
+  max-width: 720px;
+  margin: 0 auto var(--space-7);
+  text-align: center;
+}
+
+.section-head.center { text-align: center; }
+
+.section-head .section-eyebrow {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-head .section-eyebrow::before {
+  left: -32px;
+}
+
+/* Strong */
+strong, b { font-weight: 700; color: var(--color-ink); }
+em, i { font-style: italic; }
