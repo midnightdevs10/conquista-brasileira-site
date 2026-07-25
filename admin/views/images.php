@@ -48,6 +48,10 @@ declare(strict_types=1);
     <div class="image-card__body">
       <h3 class="image-card__name"></h3>
     </div>
+    <div class="image-card__meta">
+      <span class="image-card__section-badge" hidden></span>
+      <span class="image-card__usage-count" hidden></span>
+    </div>
     <footer class="image-card__actions">
       <button type="button" class="btn btn--primary" data-action="swap">Substituir</button>
       <button type="button" class="btn btn--ghost"   data-action="rename">Renomear</button>

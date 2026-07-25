@@ -19,7 +19,7 @@ $moduleInfo = $modules[$active];
 $moduleKey  = $active;
 
 // Versão do admin (para cache-busting dos assets)
-$adminVersion = '25';
+$adminVersion = '26';
 
 // Site público
 $publicBase = '../';

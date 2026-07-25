@@ -62,8 +62,14 @@ if (!function_exists('scanUsage')) {
             $dir = $root . DIRECTORY_SEPARATOR . 'js';
             $hits = [];
             if (!is_dir($dir)) return $hits;
-            foreach (glob($dir . DIRECTORY_SEPARATOR . '*.js') ?: [] as $file) {
-                $rel = 'js/' . basename($file);
+            $iter = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)
+            );
+            foreach ($iter as $info) {
+                $file = $info->getPathname();
+                if (strtolower($info->getExtension()) !== 'js') continue;
+                $rel = 'js/' . ltrim(str_replace($dir, '', $file), DIRECTORY_SEPARATOR);
+                $rel = str_replace('\\', '/', $rel);
                 $hits = array_merge($hits, scanJsFile($file, $rel, $variants));
             }
             return $hits;
@@ -128,14 +134,31 @@ if (!function_exists('scanUsage')) {
     if (!function_exists('scanJson')) {
         function scanJson(string $needle, array $variants, string $root): array
         {
-            $path = ADMIN_CONFIG_FILE;
-            if (!is_file($path)) return [];
-            $raw = @file_get_contents($path);
-            if ($raw === false) return [];
-            $data = json_decode($raw, true);
-            if (!is_array($data)) return [];
+            $dataDir = ADMIN_DATA_DIR;
             $hits = [];
-            walkJsonForPaths($data, '', $variants, $hits);
+            if (!is_dir($dataDir)) return $hits;
+            $iter = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($dataDir, \FilesystemIterator::SKIP_DOTS)
+            );
+            foreach ($iter as $info) {
+                if (strtolower($info->getExtension()) !== 'json') continue;
+                $path = $info->getPathname();
+                $rel  = 'data/' . ltrim(str_replace($dataDir, '', $path), DIRECTORY_SEPARATOR);
+                $rel  = str_replace('\\', '/', $rel);
+                $raw = @file_get_contents($path);
+                if ($raw === false) continue;
+                $data = json_decode($raw, true);
+                if (!is_array($data)) continue;
+                $fileHits = [];
+                walkJsonForPaths($data, '', $variants, $fileHits);
+                // Reescreve o file em cada hit pra apontar pro arquivo relativo correto
+                foreach ($fileHits as &$h) {
+                    $h['file'] = $rel;
+                    $h['detail'] = str_replace('data/config.json', $rel, $h['detail'] ?? $rel);
+                }
+                unset($h);
+                $hits = array_merge($hits, $fileHits);
+            }
             return $hits;
         }
     }
@@ -249,6 +272,69 @@ if (!function_exists('scanUsage')) {
             if (preg_match('/<meta\b/i', $trim)) return '<meta>';
             if (preg_match('/<link\b/i', $trim)) return '<link>';
             return null;
+        }
+    }
+
+    if (!function_exists('updateImageReferences')) {
+        // Substitui todas as ocorrências do nome antigo de imagem pelo novo,
+        // em index.html, data/**/*.json e js/**/*.js. Retorna uma lista
+        // legível dos arquivos alterados com a contagem de substituições.
+        // Ex: ["index.html (3)", "data/config.json (1)", "js/main.js (2)"]
+        function updateImageReferences(string $oldName, string $newName): array
+        {
+            $oldRel = 'assets/images/' . $oldName;
+            $newRel = 'assets/images/' . $newName;
+            $oldAbs = '/' . $oldRel;
+            $newAbs = '/' . $newRel;
+
+            $oldNeedles = [$oldRel, $oldAbs];
+            $newNeedles = [$newRel, $newAbs];
+
+            $updated = [];
+
+            $replace = function (string $absPath, string $relPath) use ($oldNeedles, $newNeedles, &$updated) {
+                if (!is_file($absPath)) return;
+                $raw = @file_get_contents($absPath);
+                if ($raw === false) return;
+                $new = str_replace($oldNeedles, $newNeedles, $raw, $count);
+                if ($count > 0 && @file_put_contents($absPath, $new) !== false) {
+                    $updated[] = $relPath . ' (' . $count . ' substituição(ões))';
+                }
+            };
+
+            // index.html (raiz)
+            $replace(ADMIN_PROJECT_ROOT . DIRECTORY_SEPARATOR . 'index.html', 'index.html');
+
+            // data/**/*.json
+            if (is_dir(ADMIN_DATA_DIR)) {
+                $iter = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator(ADMIN_DATA_DIR, \FilesystemIterator::SKIP_DOTS)
+                );
+                foreach ($iter as $info) {
+                    if (strtolower($info->getExtension()) !== 'json') continue;
+                    $abs  = $info->getPathname();
+                    $rel  = 'data/' . ltrim(str_replace(ADMIN_DATA_DIR, '', $abs), DIRECTORY_SEPARATOR);
+                    $rel  = str_replace('\\', '/', $rel);
+                    $replace($abs, $rel);
+                }
+            }
+
+            // js/**/*.js
+            $jsDir = ADMIN_PROJECT_ROOT . DIRECTORY_SEPARATOR . 'js';
+            if (is_dir($jsDir)) {
+                $iter = new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($jsDir, \FilesystemIterator::SKIP_DOTS)
+                );
+                foreach ($iter as $info) {
+                    if (strtolower($info->getExtension()) !== 'js') continue;
+                    $abs  = $info->getPathname();
+                    $rel  = 'js/' . ltrim(str_replace($jsDir, '', $abs), DIRECTORY_SEPARATOR);
+                    $rel  = str_replace('\\', '/', $rel);
+                    $replace($abs, $rel);
+                }
+            }
+
+            return $updated;
         }
     }
 }

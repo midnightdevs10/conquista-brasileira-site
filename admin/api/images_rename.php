@@ -38,10 +38,16 @@ if (!@rename($fromAbs, $toAbs)) {
 }
 adminMoveThumb($nFrom, $nTo);
 
+// Atualiza referências em index.html, data/**/*.json, js/**/*.js
+$updatedFiles = updateImageReferences($nFrom, $nTo);
+
 jsonResponse([
-    'ok'    => true,
-    'from'  => $nFrom,
-    'to'    => $nTo,
-    'usage' => scanUsage('assets/images/' . $nTo),
-    'note'  => 'As referências em index.html, data/config.json e JS continuam apontando para o nome antigo.',
+    'ok'           => true,
+    'from'         => $nFrom,
+    'to'           => $nTo,
+    'usage'        => scanUsage('assets/images/' . $nTo),
+    'updatedFiles' => $updatedFiles,
+    'note'         => 'Arquivo renomeado' . (count($updatedFiles) > 0
+        ? ' e referências atualizadas em ' . count($updatedFiles) . ' arquivo(s).'
+        : '.'),
 ]);

@@ -6,6 +6,7 @@
         "subtitle": "Tradição, sabor e atendimento de família desde a primeira mordida. Pastéis artesanais feitos com ingredientes selecionados, prontos para viagem ou para saborear no nosso espaço.",
         "description": "Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.",
         "foundedYear": null,
+        "logo": "assets/images/logo.png",
         "city": "Cajamar",
         "state": "SP",
         "address": "Av. Ten. Marques, 1077 - Polvilho, Cajamar - SP, 07793-450",
@@ -1359,7 +1360,14 @@
         "title": "Conquista Brasileira Pastelaria | Cajamar SP",
         "description": "Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.",
         "keywords": "pastelaria cajamar, pastel em cajamar, delivery cajamar, pastel brasileiro, pastelaria conquista brasileira",
-        "ogImage": "assets/images/conjunto.png",
+        "favicon": "assets/images/logo.png",
+        "og": {
+            "image": "assets/images/conjunto.png",
+            "imageAlt": "Conquista Brasileira — fachada e ambiente"
+        },
+        "twitter": {
+            "image": "assets/images/conjunto.png"
+        },
         "url": "https://conquistabrasileira.com.br",
         "type": "restaurant",
         "schema": {
