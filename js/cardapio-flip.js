@@ -387,8 +387,8 @@
       // na viewport — como nosso livro começa fora da viewport durante
       // o build, a fonte só seria trocada depois.
       const loadPromises = [
-        document.fonts.load('700 1.2rem "Playfair Display"').catch(() => {}),
-        document.fonts.load('400 0.7rem "Inter"').catch(() => {}),
+        document.fonts.load('700 1.2rem "Fraunces"').catch(() => {}),
+        document.fonts.load('400 0.7rem "Nunito Sans"').catch(() => {}),
         document.fonts.ready,
       ];
       return Promise.all(loadPromises);

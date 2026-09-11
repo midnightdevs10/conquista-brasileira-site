@@ -30,6 +30,13 @@
   gap: var(--space-5);
 }
 
+/* Telões (≥1600px): o header usa um container MAIOR que o conteúdo da
+   página — a marca encosta mais na esquerda e a nav respira mais, em vez
+   de ficar espremida no centro do monitor. */
+@media (min-width: 1600px) {
+  .site-header .container { max-width: 1760px; }
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -72,11 +79,11 @@
 .main-nav ul {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 .nav-link {
   position: relative;
-  padding: 0.5rem 0.9rem;
+  padding: 0.5rem 1.1rem;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--color-ink-soft);
@@ -165,22 +172,35 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 100%;
+  /* SEM max-width: 100% aqui — o .hero-content É um .container e precisa
+     respeitar o --container (antes esse override fazia o hero ser full-bleed
+     enquanto as seções abaixo ficavam estreitas no centro — buracos gigantes
+     nas laterais em telões). */
   padding-top: var(--space-7);
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: var(--space-7);
   align-items: center;
 }
-/* Texto levemente empurrado pra direita (sem tocar no limite do container) */
+/* Texto levemente empurrado pra direita (sem tocar no limite do container).
+   O clamp TAPEIA o empurrão em telões: 6vw em 2560px viraria 153px de
+   recuo — o texto ficava "flutuando" longe da margem esquerda. */
 .hero-content > .hero-text-block {
-  padding-left: max(var(--space-3), 6vw);
+  padding-left: clamp(var(--space-3), 4vw, var(--space-7));
 }
 /* Imagem levemente empurrada pra esquerda (sai um pouco pra fora) */
 .hero-content > .hero-floating {
-  margin-left: -3vw;
+  margin-left: clamp(-48px, -3vw, -12px);
   max-width: 460px;
   margin-top: 0;
+}
+/* Telões: imagem maior pra preencher a coluna direita (no grid 1.4fr/1fr
+   a coluna 2 tem ~557px no container de 1480) e margin-left menos agressivo
+   — o canto da foto rotacionada em -3° invadia a cauda do título
+   ("...Pastéis") em 2560px. DEPOIS da regra base (mesma especificidade:
+   quem vem depois no arquivo ganha). */
+@media (min-width: 1600px) {
+  .hero-content > .hero-floating { max-width: 540px; margin-left: -24px; }
 }
 
 .hero-eyebrow {

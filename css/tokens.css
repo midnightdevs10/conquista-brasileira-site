@@ -34,9 +34,11 @@
   --color-whatsapp: #25D366;
   --color-whatsapp-dark: #1DA851;
 
-  /* === Tipografia === */
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* === Tipografia ===
+     Fraunces: serifada "artisanal" de cantos macios — calor de padaria artesanal.
+     Nunito Sans: arredondada e amigável, leitura fácil. Ambas variáveis (self-hosted). */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-script: 'Pacifico', cursive;
 
   --fs-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.85rem);
@@ -102,4 +104,11 @@
   --gradient-warm-soft: linear-gradient(135deg, #FBE4D2 0%, #FFF1D6 100%);
   --gradient-dark: linear-gradient(180deg, #1A130E 0%, #2A1E16 100%);
   --gradient-overlay: linear-gradient(180deg, rgba(26, 19, 14, 0.85) 0%, rgba(26, 19, 14, 0.55) 100%);
+}
+
+/* === Telões (≥1600px): container mais largo pra não sobrar vazio gigante
+   nas laterais em monitores 1920/2560. Propaga pra TODAS as seções
+   (inclusive header) via --container. === */
+@media (min-width: 1600px) {
+  :root { --container: 1480px; }
 }

@@ -21,7 +21,7 @@
       whatsapp: '5511963805855',
       whatsappDisplay: '(11) 96380-5855',
       email: 'contato@conquistabrasileira.com.br',
-      instagram: 'https://instagram.com/conquista.brasileira',
+      instagram: 'https://www.instagram.com/conquista_brasileira',
       facebook: '',
       googleMaps: {
         lat: -23.4103,
