@@ -1,0 +1,12 @@
+# Lixeira de imagens do admin antigo (não publicar)
+assets/images/.trash/
+
+# Arquivo de nome reservado do Windows, não deletável
+nul
+
+# Backups
+*.bak
+
+# Logs locais
+.server.log
+*.log

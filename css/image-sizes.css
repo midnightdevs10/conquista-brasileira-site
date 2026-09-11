@@ -26,17 +26,40 @@
 }
 
 /* === ABOUT: 2 imagens empilhadas ===
-   Antes (layout.css): aspect-ratio: 4/3 no container + object-fit: cover na img
-   → cortava bordas se a imagem tivesse outra proporção.
-   Agora: mesmo aspect-ratio 4/3, mas object-fit: contain. A imagem
-   INTEIRA aparece; o fundo do container é cinza-quente (--color-line)
-   pra suavizar o "espaço vazio" quando a proporção difere de 4:3. */
+   Caixa fixa em 435×435 (quadrada) no desktop, com max-width: 100%
+   pra encolher gradualmente em telas menores sem estourar.
+
+   O `.about-visual` é flex column esticado pelo grid até a altura
+   do .about-text. Sem proteções, o flex/stretch + a <img> interna
+   com `width:100%; height:100%` (do layout.css) forçam o container
+   a crescer até a altura intrínseca da imagem, vencendo o aspect-ratio
+   do pai. Defesas aplicadas:
+     1) width: 435px + aspect-ratio: 1/1 — define a forma: quadrado.
+     2) max-height: 435px — limite MÁXIMO, mesmo se o flex/imgs filhas
+        tentarem empurrar a altura pra cima. Em mobile (max-width: 100%
+        < 435), o aspect-ratio cuida do quadrado automaticamente.
+     3) overflow: hidden — qualquer conteúdo que estoure é cortado,
+        não afeta o layout.
+   object-fit: cover na <img>: a foto preenche o quadrado INTEIRO,
+   cortando as sobras laterais (em retrato 3:4) ou topo/base (em
+   paisagem 4:3). O resultado é sempre um quadrado visualmente cheio,
+   sem barras cinza nas laterais. object-position: center mantém o
+   foco no centro da foto (parte mais importante do retrato). */
 .about-img-main,
 .about-img-sub {
+  width: 500px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 500px;
+  overflow: hidden;
   background: var(--color-line);
 }
+/* .about-img-sub precisa permitir que o .about-card-stamp (selo "Desde 2018")
+   vaze pra fora da borda inferior-direita. Sem essa exceção, o overflow: hidden
+   acima cortaria o selo no meio. */
+.about-img-sub { overflow: visible; }
 .about-img-main img,
 .about-img-sub img {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }

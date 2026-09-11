@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF8E7"/>
+      <stop offset="100%" stop-color="#F5E6C8"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <!-- Prato -->
+  <ellipse cx="200" cy="320" rx="140" ry="20" fill="#D4A857" opacity="0.4"/>
+  <ellipse cx="200" cy="305" rx="135" ry="55" fill="#F5E6C8" stroke="#B81E1E" stroke-width="2"/>
+  <ellipse cx="200" cy="295" rx="120" ry="42" fill="#FFF8E7"/>
+  <!-- Pastel de festa -->
+  <path d="M 140 290 Q 200 240 260 290 L 260 310 L 140 310 Z" fill="#FFD9A8" stroke="#B81E1E" stroke-width="2"/>
+  <!-- Recheio -->
+  <path d="M 150 300 Q 200 270 250 300 L 250 305 L 150 305 Z" fill="#B81E1E"/>
+  <!-- Velas -->
+  <rect x="170" y="220" width="8" height="60" fill="#FF6B6B"/>
+  <rect x="196" y="200" width="8" height="80" fill="#4ECDC4"/>
+  <rect x="222" y="220" width="8" height="60" fill="#FFE66D"/>
+  <!-- Chamas -->
+  <ellipse cx="174" cy="215" rx="4" ry="8" fill="#FF9F1C"/>
+  <ellipse cx="200" cy="195" rx="4" ry="8" fill="#FF9F1C"/>
+  <ellipse cx="226" cy="215" rx="4" ry="8" fill="#FF9F1C"/>
+  <ellipse cx="174" cy="210" rx="2" ry="4" fill="#FFE66D"/>
+  <ellipse cx="200" cy="190" rx="2" ry="4" fill="#FFE66D"/>
+  <ellipse cx="226" cy="210" rx="2" ry="4" fill="#FFE66D"/>
+  <!-- Confete -->
+  <circle cx="80" cy="80" r="4" fill="#B81E1E"/>
+  <circle cx="120" cy="50" r="3" fill="#4ECDC4"/>
+  <circle cx="280" cy="60" r="4" fill="#FFE66D"/>
+  <circle cx="320" cy="100" r="3" fill="#B81E1E"/>
+  <circle cx="60" cy="140" r="3" fill="#4ECDC4"/>
+  <circle cx="340" cy="160" r="4" fill="#FFE66D"/>
+  <rect x="100" y="100" width="6" height="6" fill="#B81E1E" transform="rotate(30 103 103)"/>
+  <rect x="290" y="120" width="6" height="6" fill="#4ECDC4" transform="rotate(45 293 123)"/>
+  <rect x="70" y="180" width="6" height="6" fill="#FFE66D" transform="rotate(60 73 183)"/>
+  <!-- Texto -->
+  <text x="200" y="370" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#B81E1E" font-weight="bold">Festas &amp; Eventos</text>
+</svg>

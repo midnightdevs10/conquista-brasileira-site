@@ -44,10 +44,32 @@
 }
 @media (max-width: 560px) {
   /* Mobile: uma página por vez (retrato) — proporção 5:7. */
-  .book { aspect-ratio: 5 / 7; min-height: 520px; max-height: none; }
+  /* Sem min-height fixo aqui: a StPageFlip com usePortrait+stretch
+     lê o aspect-ratio do container via getBoundingClientRect e,
+     se houver min-height alto, ela dimensiona a página com base
+     nele (largura = altura × 5/7), o que pode estourar a viewport.
+     Deixamos só o aspect-ratio guiar e a StPageFlip ajusta. */
+  .book {
+    aspect-ratio: 5 / 7;
+    min-height: 0;
+    max-height: none;
+    /* Garante que o livro nunca excede a largura útil do container */
+    width: 100%;
+    max-width: 100%;
+  }
   /* No mobile, a página esquerda (que projeta a linha) não aparece,
      então a linha some naturalmente. */
   .book-page--right { box-shadow: inset 8px 0 18px -10px rgba(31, 26, 23, 0.18); }
+
+  /* SEM overrides de tipografia da capa (.book-cover__*) aqui: a capa
+     também é canônica (tamanho PC) e é escalada junto com as páginas. */
+}
+
+/* Telas muito pequenas (≤ 360px): limita a largura máxima pra garantir
+   que mesmo em viewport mínimo (320px) o livro cabe, considerando o
+   padding do container e uma folga. */
+@media (max-width: 380px) {
+  .book { max-width: calc(100vw - 32px); }
 }
 
 /* StPageFlip gera uma `.stf__block` interna — escondemos até a lib montar */
@@ -68,6 +90,38 @@
 .stf__item.--left  { box-shadow: inset -8px 0 14px -8px rgba(31, 26, 23, 0.18), 1px 0 0 0 #0c0a09; }
 .stf__item.--right { box-shadow: inset  8px 0 14px -8px rgba(31, 26, 23, 0.18), -1px 0 0 0 #0c0a09; }
 
+/* === Páginas filler (paridade do StPageFlip) ===
+   A regra `trySplitOneBlock` em cardapio-pages.js divide a maior seção
+   possível pra manter a paridade; quando NÃO sobra nenhuma seção com
+   ≥2 itens, é adicionada uma página filler vazia. Ela precisa existir
+   pro livro fechar como capa dura, mas não pode confundir o leitor
+   com "página em branco".
+
+   Aqui tornamos o filler uma "guarda do livro" (folha decorativa com
+   ornamento central sutil) — visualmente claro que é página de paridade,
+   sem repetir o nome de nenhuma seção nem listar sabores. */
+.book-page--filler .book-page__inner {
+  /* Sem textura de papel visível (a textura sutil está no .book-page,
+     mas aqui usamos o inner como overlay com gradiente de guarda) */
+  background:
+    radial-gradient(circle at center,
+      rgba(232, 93, 4, 0.08) 0%,
+      rgba(232, 93, 4, 0.04) 30%,
+      transparent 60%),
+    var(--color-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.book-page--filler .book-page__inner::before {
+  content: '';
+  width: 60%;
+  max-width: 160px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232, 93, 4, 0.4), transparent);
+  border-radius: 2px;
+}
+
 /* === Página genérica (todas as folhas do livro) === */
 .book-page {
   position: relative;
@@ -87,25 +141,15 @@
   position: relative;
   width: 100%;
   height: 100%;
-  /* Padding reduzido pra caber melhor no livro menor (max-height 560px). */
-  padding: clamp(1rem, 3vw, 1.75rem);
+  /* Padding uniformemente distribuído. Sem .book-page__number (removido em
+     2026-08-07 a pedido do usuário — sobrepunha a descrição do último item
+     da página), não precisamos de padding-bottom extra reservado.
+     Valor FIXO (o do PC, clamp máx. 1.75rem): sem vw — a página é canônica
+     e dependência de viewport mudaria as quebras de página no celular. */
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
 }
-/* Numeração da página (canto inferior externo — sempre do lado oposto à lombada).
-   Usa as classes dinâmicas da StPageFlip (`--left` / `--right`) pra alinhar
-   a numeração no canto externo de cada página. */
-.book-page__number {
-  position: absolute;
-  bottom: 0.9rem;
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.stf__item.--left  .book-page__number { right: 1.5rem; }
-.stf__item.--right .book-page__number { left: 1.5rem; }
 
 /* === Header de seção (eyebrow + título + linha + descrição) === */
 .menu-section-head {
@@ -139,7 +183,9 @@
 }
 .menu-section-title {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  /* Tamanho FIXO (o do PC, clamp máx. 1.5rem): sem vw aqui — a página é
+     canônica e qualquer dependência de viewport mudaria as quebras. */
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-ink);
   line-height: 1.1;
@@ -235,18 +281,11 @@
   padding-left: 1.25rem;
   border-left: 1px solid var(--color-line);
 }
-@media (max-width: 700px) {
-  .menu-split {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .menu-split > .menu-flavor-list + .menu-flavor-list {
-    padding-left: 0;
-    padding-top: 1rem;
-    border-left: 0;
-    border-top: 1px solid var(--color-line);
-  }
-}
+/* === .menu-split e tipografia de página: SEM media queries ===
+   As páginas são paginadas e renderizadas no tamanho canônico do PC
+   (425×595, ver cardapio-flip.js) e escaladas pro display depois.
+   Qualquer override baseado na largura da TELA mudaria o layout interno
+   e as quebras de página deixariam de ser idênticas entre dispositivos. */
 
 /* === Layout com foto à esquerda === */
 /* (removido — cardápio agora é 100% textual, sem fotos) */
@@ -873,23 +912,6 @@
   font-size: 1rem;
 }
 
-/* Hint de teclado (pequeno, discreto) */
-.book-nav__hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.15rem 0.45rem;
-  border: 1px solid var(--color-line);
-  border-radius: 4px;
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  color: var(--color-muted);
-  background: var(--color-paper);
-}
-@media (max-width: 700px) {
-  .book-nav__hint { display: none; }
-}
-
 /* === CTA final (chamar no WhatsApp) — fora do livro === */
 .menu-cta {
   text-align: center;
@@ -944,4 +966,51 @@
 .stf__item.--right:has(.book-cover--back),
 .stf__item.--left:has(.book-cover):not(:has(.book-cover--back)) {
   box-shadow: none;
+}
+
+/* ================================================================
+   MODO PÁGINA ÚNICA (.book--scroll) — cardápio inteiro rolável
+   O JS (cardapio-flip.js, SCROLL_MODE) empilha as "páginas" do
+   cardapio-pages.js como cartões verticais, sem StPageFlip. Cada
+   cartão mantém tamanho fixo inline (largura do container, teto
+   500px, proporção 5:7) já rebalanceado pra caber — nada é cortado.
+   ================================================================ */
+.book--scroll {
+  /* Mata a geometria do "livro" — o container agora só empilha */
+  aspect-ratio: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  /* A sombra do livro fechado não faz sentido aqui — cada cartão
+     tem a sua própria sombra (abaixo). */
+  filter: none;
+}
+.book--scroll .book-page-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+  /* Sombra de "folha empilhada": sombra baixa + linha de contato */
+  box-shadow:
+    0 18px 40px rgba(31, 26, 23, 0.16),
+    0 4px 10px rgba(31, 26, 23, 0.10),
+    0 0 0 1px rgba(31, 26, 23, 0.06);
+}
+/* Capa e contracapa mantêm seus cantos de "capa dura" */
+.book--scroll .book-page-wrapper:has(.book-cover) { border-radius: 3px 8px 8px 3px; }
+.book--scroll .book-page-wrapper:has(.book-cover--back) { border-radius: 8px 3px 3px 8px; }
+/* Páginas filler (guarda de paridade do modo livro) não fazem sentido
+   numa pilha contínua — somem. */
+.book--scroll .book-page-wrapper:has(.book-page--filler) { display: none; }
+/* Navegação do livro escondida (o JS também seta [hidden], isso é a
+   trava em CSS pra garantir em qualquer estado). */
+.book-nav[hidden] { display: none !important; }
+/* Respeita quem navega por teclado: os cartões entram no fluxo normal,
+   o foco segue a ordem natural do documento. */
+@media (prefers-reduced-motion: reduce) {
+  .book--scroll .book-page-wrapper { scroll-behavior: auto; }
 }

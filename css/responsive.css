@@ -9,7 +9,9 @@
     max-width: 360px;
     margin-top: var(--space-6);
   }
-  .about-img-main, .about-img-sub { aspect-ratio: 16 / 11; }
+  /* .about-img-main/.about-img-sub: max-width: 100% cuida do encolhimento
+     em mobile (definido em image-sizes.css). Não sobrescreve aspect-ratio
+     — o quadrado 1:1 deve ser preservado em todos os breakpoints. */
 }
 
 /* === até 900px === */
@@ -36,12 +38,29 @@
     overflow-y: auto;
   }
   .main-nav.open { transform: translateY(0); opacity: 1; visibility: visible; }
-  .main-nav ul { flex-direction: column; align-items: stretch; gap: 0; }
-  .nav-link {
+  .main-nav ul { flex-direction: column; align-items: stretch; gap: 2px; }
+  /* display: block é OBRIGATÓRIO aqui: o .nav-link base (layout.css) é
+     display:inline (fica dentro do flex do header). Inline + padding
+     vertical fazia os itens SOBREPOR (o <a> media 47px dentro de um <li>
+     de 26px) e a borda só aparecia sob o texto — a "escadinha" desalinhada
+     que o usuário via ao abrir o hamburger. Block ocupa a linha inteira,
+     com fundo suave no ativo/hover pra leitura organizada. */
+  .main-nav .nav-link {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
     padding: 0.85rem 1rem;
-    border-radius: var(--radius);
+    border-radius: 12px;
     text-align: left;
-    border-bottom: 1px solid var(--color-line);
+    font-size: 1rem;
+    line-height: 1.2;
+    border-bottom: none;
+    background: transparent;
+  }
+  .main-nav .nav-link:hover,
+  .main-nav .nav-link.active {
+    background: var(--color-cream);
+    border-radius: 12px;
   }
   .nav-link::after { display: none; }
   .header-cta { width: 100%; justify-content: center; margin-top: var(--space-2); }
@@ -77,11 +96,51 @@
     min-height: 0;
     max-height: none;
     justify-content: flex-start; /* mobile: alinha no topo, sem centralizar */
+    /* Grid item com justify-self: end (layout.css) encolhe pro max-content
+       das filhas — e .about-img-main/sub têm width: 500px fixo
+       (image-sizes.css), então o visual virava 500px e estourava a
+       viewport mobile (scroll horizontal em 375px). Ocupar a coluna
+       inteira faz o max-width: 100% das imagens funcionar de verdade. */
+    width: 100%;
+    max-width: 100%;
   }
+  /* Stamp "Desde 2018": no mobile continua NO CANTO da foto de baixo
+     (igual ao desktop), só que menor e com o canto puxado PRA DENTRO da
+     tela — como a .about-img-sub ocupa 100% da largura útil, um
+     right/bottom negativo do desktop vazaría a viewport. */
+  .about-card-stamp {
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    transform: rotate(-4deg);
+  }
+  .about-card-stamp span { font-size: 0.58rem; }
+  .about-card-stamp strong { font-size: 1rem; }
 
   .carousel { padding: 0 50px; }
   .carousel-prev { left: 4px; }
   .carousel-next { right: 4px; }
+
+  /* === HERO CTA: empilha em coluna desde tablet (≤900px) ===
+     No desktop (.hero-cta .btn-equal tem min-width: 240px), dois botões
+     somam 480px + gap 12px = 492px. Em viewport tablet (~700-900px) o
+     container do hero-cta (max-width 560px) ainda comporta, MAS quando
+     flex-wrap kick in (uma linha não cabe) o segundo botão desce e fica
+     sozinho, alinhado à esquerda — visual quebrado. Coluna desde ≤900px
+     elimina esse caso por completo, e cada botão usa a largura natural
+     do pill (não fica "esticado" pelos overrides min/max-width). */
+  .hero-cta { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+  .hero-cta .btn,
+  .hero-cta .btn-equal {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    flex: 0 0 auto;          /* sem grow/shrink — base = conteúdo */
+    align-self: stretch;
+    box-sizing: border-box;
+  }
 }
 
 /* === até 768px === */
@@ -100,13 +159,20 @@
   /* Carrossel mobile: 1 slide por vez, mais padding */
   .carousel { padding: 0 44px; }
 
-  /* === Cardápio: ajustes no tablet === */
-  .book-page__inner { padding: 1rem 1.1rem; }
-  .menu-section-title { font-size: 1.05rem; }
-  .menu-section-lead { font-size: 0.7rem; }
-  .menu-flavor { padding: 0.32rem 0; }
-  .menu-flavor-name { font-size: 0.8rem; }
-  .menu-flavor-desc { font-size: 0.65rem; }
+  /* === Hero badges: 2x2 desde tablet (≤768px) ===
+     No desktop 4 colunas ficam perfeitas (largura generosa). A partir
+     de tablet/celular grande (~700px), 4 colunas espremem cada badge
+     em ~140-160px e o texto "Tradição de Família" quebra feio. 2x2
+     dá ~300px por badge — respira bem. */
+  .hero-badges { grid-template-columns: 1fr 1fr; }
+  .hero-badges li { font-size: 0.78rem; padding: 0.45rem 0.7rem; }
+
+  /* === Cardápio ===
+     SEM overrides de tipografia/padding das páginas aqui: as páginas são
+     paginadas e renderizadas no tamanho canônico do PC (425×595, ver
+     cardapio-flip.js) e só depois escaladas pra caber na tela. Qualquer
+     ajuste de fonte/padding baseado na LARGURA DA TELA mudaria o layout
+     interno e as quebras de página deixariam de ser idênticas ao PC. */
 }
 
 /* === até 600px (mobile) — mantém proporção paisagem, só encolhe === */
@@ -121,19 +187,26 @@
 @media (max-width: 560px) {
   .container { padding: 0 var(--space-4); }
 
-  .hero-title { font-size: clamp(2.25rem, 11vw, 3.5rem); }
+  /* Mobile: título reduzido pra caber "Melhores Pastéis" em 1 linha
+     em viewports de 360-414. 9vw em 375 ≈ 33.75px, max 44px. */
+  .hero-title { font-size: clamp(1.9rem, 9vw, 2.75rem); }
 
-  /* No mobile os botões ficam 100% largura */
+  /* No mobile os botões ficam 100% largura (a regra column do @900px já
+     cuida do empilhamento e do flex — aqui só reforçamos largura 100%). */
   .btn-equal { width: 100%; min-width: 0; }
 
-  .btn-lg { padding: 1rem 1.5rem; }
-  .btn-xl { padding: 1.2rem 1.75rem; font-size: var(--fs-md); }
+  .btn-lg { padding: 0.95rem 1.25rem; font-size: var(--fs-base); }
+  .btn-xl { padding: 1.1rem 1.5rem; font-size: var(--fs-base); }
 
   .differentials-grid { grid-template-columns: 1fr; }
 
+  /* (hero-badges 2x2 já foi promovido pra breakpoint 768px — sem
+     override adicional aqui pra evitar duplicação.) */
+
   .about-features { padding: var(--space-4); }
   .about-visual { gap: var(--space-3); }
-  .about-img-main, .about-img-sub { aspect-ratio: 16 / 10; }
+  /* .about-img-main/.about-img-sub: max-width: 100% encolhe o quadrado
+     automaticamente em mobile (image-sizes.css). */
 
   .hours-list li { flex-wrap: wrap; gap: 4px; }
   .hours-list .day { flex-basis: 100%; }
@@ -147,25 +220,65 @@
 
   .lightbox-close, .lightbox-prev, .lightbox-next { width: 44px; height: 44px; font-size: 1.4rem; }
 
-  /* === Cardápio: ajustes no mobile === */
-  .book-cover__title { font-size: 1.6rem; }
-  .book-cover__tagline { font-size: 0.75rem; max-width: 240px; }
-  .book-cover__start { padding: 0.5rem 0.95rem; font-size: 0.72rem; }
-  .menu-section-title { font-size: 0.95rem; }
-  .menu-section-lead { font-size: 0.65rem; }
-  .menu-section-eyebrow { font-size: 0.55rem; letter-spacing: 0.18em; }
-  .menu-flavor { padding: 0.28rem 0; }
-  .menu-flavor-name { font-size: 0.78rem; }
-  .menu-flavor-desc { font-size: 0.6rem; }
-  .menu-flavor-tag { font-size: 0.5rem; padding: 0.1rem 0.35rem; }
+  /* === Cardápio ===
+     Mesmo raciocínio do ≤768px: as páginas são canônicas (tamanho PC,
+     depois escaladas) — NADA de override tipográfico baseado em viewport.
+     A capa (.book-cover__*) e os sabores também não mudam.
+     Só o chrome AO REDOR do livro (setas/indicador) é que acompanha a tela. */
   .book-nav__btn { width: 42px; height: 42px; }
   .book-nav__indicator { font-size: 0.78rem; min-width: 90px; }
 }
 
 /* === até 380px === */
 @media (max-width: 380px) {
-  .hero-cta { flex-direction: column; }
-  .hero-cta .btn { width: 100%; }
+  /* iPhone SE 1ª/2ª geração (320px) e Galaxy Fold fechado: cobertura
+     defensiva pra evitar overflow horizontal e garantir leitura. */
+
+  /* Container respira menos pra dar mais largura útil ao conteúdo */
+  .container { padding: 0 var(--space-3); }
+
+  /* Título do hero ainda menor — 1.7rem mantém legibilidade sem
+     precisar de word-break em "Melhores Pastéis" / "da Cidade". */
+  .hero-title { font-size: clamp(1.7rem, 8vw, 2.4rem); line-height: 1.08; }
+
+  /* Sub-hero sem max-width apertado — deixa respirar */
+  .hero-subtitle { font-size: var(--fs-sm); line-height: 1.55; }
+
+  /* Eyebrow mais compacto pra caber em 1 linha em 320px */
+  .hero-eyebrow { font-size: 0.7rem; padding: 0.45rem 0.85rem; letter-spacing: 0.06em; gap: 6px; }
+
+  /* Hero badges 1 coluna — em 320px 2 colunas ficam com ~140px
+     cada e o texto ainda quebra; 1 coluna garante leitura limpa. */
+  .hero-badges { grid-template-columns: 1fr; gap: var(--space-2); }
+  .hero-badges li { font-size: 0.75rem; padding: 0.4rem 0.7rem; }
+
+  /* Cardápio: tabs mais compactos pra caber sem wrap feio em 320px */
+  .menu-tab {
+    width: auto;
+    min-width: 130px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.7rem;
+  }
+  .menu-sub-tab { font-size: 0.65rem; padding: 0.35rem 0.65rem; }
+
+  /* Livro do cardápio: usa quase toda largura (sobra 24px = 12 cada lado) */
+  .book { max-width: calc(100vw - 24px); }
+
+  /* Horários: destaque de "hoje" SEM margin negativa — a lista não tem
+     padding pra compensar, e o -8px de cada lado estourava a viewport
+     em 320-375px (scroll horizontal). O padding interno já destaca. */
+  .hours-list li.today { margin: 0; padding: var(--space-4) 8px; }
+
+  /* Float buttons levemente menores pra não cobrir conteúdo em 320px */
+  .whatsapp-float { width: 46px; height: 46px; right: 12px; bottom: 12px; }
+  .whatsapp-float svg { width: 22px; height: 22px; }
+  .instagram-float { width: 46px; height: 46px; right: 12px; bottom: 64px; }
+  .instagram-float svg { width: 22px; height: 22px; }
+
+  /* Botões flutuantes do lightbox: um pouco menores pra não cobrir foto */
+  .lightbox-close, .lightbox-prev, .lightbox-next { width: 40px; height: 40px; font-size: 1.2rem; }
+  .lightbox-close { top: 16px; right: 16px; }
+  .lightbox-prev, .lightbox-next { top: 50%; }
 }
 
 /* === Landscape / telas muito altas === */

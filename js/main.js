@@ -155,7 +155,9 @@
           return `
           <div class="marquee-slide" data-gallery-index="${realIndex}">
             <figure class="gallery-item" tabindex="0" role="button" aria-label="Ampliar imagem: ${escapeHtml(item.alt)}">
-              <img src="${escapeHtml(item.src)}" alt="${escapeHtml(item.alt)}" loading="lazy" decoding="async" />
+              <img src="${escapeHtml(item.src)}" alt="${escapeHtml(item.alt)}" loading="eager" decoding="async" />
+              <!-- eager: o item vive num marquee que rola sozinho — lazy fazia a foto
+                   entrar em preto no celular (só carregava quando chegava perto) -->
               <figcaption class="gallery-item-caption">
                 <span class="gallery-item-title">${escapeHtml(item.caption || item.alt || '')}</span>
                 <span class="gallery-item-desc">${escapeHtml(item.description || '')}</span>
@@ -1221,119 +1223,4 @@
 
     setInterval(updateOpenBadge, 60000);
   });
-
-  // Live preview: re-render only the section that was edited.
-  // Dispatched by the admin shell as the user types. Detail shape:
-  //   { section: 'hero' | 'about' | ..., payload: <section object> }
-  window.addEventListener('site:section-preview', (e) => {
-    const detail = (e && e.detail) || {};
-    const { section, payload } = detail;
-    if (!section || !state.config) return;
-    // Mutate the in-memory config so subsequent renders see the new value.
-    state.config[section] = payload;
-    switch (section) {
-      case 'hero':         renderHero(state.config); break;
-      case 'about':        renderAbout(state.config); break;
-      case 'differentials':renderDifferentials(state.config); break;
-      case 'services':     renderServices(state.config); break;
-      case 'gallery':      renderGallery(state.config); break;
-      case 'hours':        renderHours(state.config); break;
-      case 'faq':          renderFAQ(state.config); break;
-      case 'contact':      renderContact(state.config); break;
-      case 'footer':       renderFooter(state.config); break;
-      case 'sections':     renderPageContent(state.config); break;
-      case 'seo':          renderSeoMeta(state.config); renderLogo(state.config); break;
-      case 'company':      renderLogo(state.config); renderWhatsApp(state.config); break;
-      // whatsappMessages, menu, stats: no live renderer in the public page yet.
-    }
-  });
-
-  /* ============== Live preview cross-tab (admin ↔ site público) ==============
-     O admin (admin/index.php?module=contato) emite eventos via BroadcastChannel
-     e localStorage. Aqui a gente escuta os dois e reaplica os renderers.
-
-     Formato da mensagem:
-       { type: 'site:section-preview', section: 'company', payload: {...} }
-     Formato do localStorage (com t = timestamp pra evitar replay):
-       { t: <ms>, section: 'company', payload: {...} }
-     ======================================================================= */
-  function applyPreview(section, payload) {
-    if (!section || !payload || !state.config) return;
-    state.config[section] = payload;
-    switch (section) {
-      case 'company': renderLogo(state.config); renderWhatsApp(state.config); break;
-    }
-  }
-
-  if (typeof BroadcastChannel !== 'undefined') {
-    try {
-      const ch = new BroadcastChannel('conquista-brasileira');
-      ch.addEventListener('message', (ev) => {
-        const msg = ev.data || {};
-        if (msg.type === 'site:section-preview') {
-          applyPreview(msg.section, msg.payload);
-        } else if (msg.type === 'site:config-reload-request') {
-          // Recarrega o config.json e re-renderiza tudo
-          loadConfigAndDispatch();
-        }
-      });
-    } catch (_) { /* noop */ }
-  }
-
-  // Fallback storage event (não dispara na própria aba)
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'cb:section-preview' && e.newValue) {
-      try {
-        const msg = JSON.parse(e.newValue);
-        applyPreview(msg.section, msg.payload);
-      } catch (_) { /* noop */ }
-    } else if (e.key === 'cb:config-reload') {
-      loadConfigAndDispatch();
-    }
-  });
-
-  function loadConfigAndDispatch() {
-    // Faz 2 fetches em paralelo: config.json (cardápio + resto) e
-    // cardapio-sections.json (paginação do livro).
-    Promise.all([
-      fetch('data/config.json', { cache: 'no-store' })
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null),
-      fetch('data/cardapio-sections.json', { cache: 'no-store' })
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null)
-    ]).then(([j, sectionsJson]) => {
-      if (j) {
-        state.config = Object.assign({}, state.config, j, {
-          company: Object.assign({}, (state.config && state.config.company) || {}, j.company || {}),
-          seo:     Object.assign({}, (state.config && state.config.seo)     || {}, j.seo     || {}),
-        });
-        // Mantém window.SITE_CONFIG em sincronia — o cardapio-flip.js (e outros
-        // módulos) leem direto de window.SITE_CONFIG, então tem que estar
-        // atualizado no reload cross-tab.
-        try { window.SITE_CONFIG = state.config; } catch (_) { /* noop */ }
-        renderSchema();
-        renderDifferentials();
-        renderGallery();
-        renderServices();
-        renderHours();
-        renderFAQ();
-        renderContact();
-        renderHero(state.config);
-        renderAbout(state.config);
-        renderFooter(state.config);
-        renderPageContent(state.config);
-        renderSeoMeta(state.config);
-        renderLogo(state.config);
-        renderWhatsApp(state.config);
-        initScrollReveal();
-      }
-      if (sectionsJson && window.CardapioData && typeof window.CardapioData.loadSections === 'function') {
-        window.CardapioData.loadSections(sectionsJson);
-        // Avisa o cardapio-flip pra rebuildar (o CardapioFlip.init já foi
-        // chamado pelo cardapio.js; o flip escuta este evento).
-        window.dispatchEvent(new CustomEvent('site:cardapio-sections-ready', { detail: sectionsJson }));
-      }
-    }).catch(err => console.warn('[Site] reload falhou:', err));
-  }
 })();

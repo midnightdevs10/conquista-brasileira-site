@@ -119,7 +119,7 @@
 
 /* Botões iguais no hero */
 .btn-equal {
-  min-width: 260px;
+  min-width: 200px;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -853,6 +853,14 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Legenda da galeria (Nosso espaço) — escondida por pedido do usuário.
+   O alt da <img> continua presente pra acessibilidade, mas o figcaption
+   visível (título + descrição sobre o gradiente preto) não aparece mais.
+   Pra reverter: comente a regra abaixo. */
+.gallery-item-caption {
+  display: none !important;
 }
 
 /* === Serviços (dentro do marquee) — cards em formato PAISAGEM (deitado) === */

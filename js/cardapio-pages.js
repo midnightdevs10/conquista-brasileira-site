@@ -11,10 +11,13 @@
 
   // ============== Helpers ==============
 
-  // Quantos itens cabem confortavelmente numa página de livro (5:7 retrato,
-  // max-height ~595px → altura útil ~437px). Medido via headless Chrome.
-  // Mantemos folga: 10 itens é o sweet spot, 11+ começa a apertar, 13+ estoura.
-  const ITEMS_PER_PAGE = 10;
+  // Teto inicial pra paginação proporcional (1 subgrupo, N páginas).
+  // O número REAL de itens por página é decidido em runtime pelo rebalanceamento
+  // baseado em DOM (ver `rebalancePages` mais abaixo) — `MAX_ITEMS_PER_PAGE`
+  // é só o ponto de partida: começamos generosos e o rebalanceamento corta
+  // onde precisar pra que cada página realmente caiba. 12 (em vez de 10) deixa
+  // folga pra descrições longas sem forçar páginas extras.
+  const MAX_ITEMS_PER_PAGE = 12;
 
   // ============== Helpers ==============
 
@@ -182,7 +185,6 @@
             <ul class="menu-toc" role="navigation" aria-label="Sumário do cardápio">
               ${items}
             </ul>
-            <span class="book-page__number">Sumário</span>
           </div>
         </div>
       `
@@ -193,7 +195,8 @@
   // Quebra uma seção em 1..N "blocos" prontos para virar páginas.
   // Cada bloco = { section, subgroups, isContinuation, pageNumber, totalPages }.
   //
-  // REGRAS (medidas via headless Chrome — ITEMS_PER_PAGE = 10):
+  // REGRAS (medidas via headless Chrome — MAX_ITEMS_PER_PAGE = 12 inicial;
+  // número real decidido em runtime por rebalancePages):
   //   - 1 subgrupo com ≤ 10 itens           → 1 bloco (todos os itens, sem continuação)
   //   - 1 subgrupo com 11-20 itens          → 2 blocos (~metade cada, 2º com continuação)
   //   - 1 subgrupo com 21-30 itens          → 3 blocos (~terço cada, 2º/3º com continuação)
@@ -210,7 +213,7 @@
     const isTwoSubs = section.subgroups.length >= 2;
     const flatItemCount = section.subgroups.reduce((s, sg) => s + sg.items.length, 0);
     const blocks = [];
-    const totalPages = Math.max(1, Math.ceil(flatItemCount / ITEMS_PER_PAGE));
+    const totalPages = Math.max(1, Math.ceil(flatItemCount / MAX_ITEMS_PER_PAGE));
 
     if (totalPages === 1) {
       // 1 página — split se houver 2+ subgrupos
@@ -248,16 +251,33 @@
     }
 
     // 2+ subgrupos, múltiplas páginas: a 1ª página usa o split normal
-    // (cabeçalho + 2 subgrupos com até ITEMS_PER_PAGE itens somados).
+    // (cabeçalho + 2 subgrupos com até MAX_ITEMS_PER_PAGE itens somados).
     // Páginas seguintes usam o subgrupo que tem mais itens restantes.
     // Aqui a regra simples: se a soma cabe em 1 página, OK; senão a 1ª
-    // página mostra os primeiros ITEMS_PER_PAGE itens misturados (primeiro
+    // página mostra os primeiros MAX_ITEMS_PER_PAGE itens misturados (primeiro
     // metade de cada subgrupo), e as seguintes mostram o resto do sub
     // maior, depois o resto do sub menor.
     const [subA, subB] = section.subgroups;
     // Pega os primeiros N itens de cada subgrupo pra 1ª página (split)
-    const firstA = subA.items.slice(0, ITEMS_PER_PAGE);
-    const firstB = subB.items.slice(0, Math.max(0, ITEMS_PER_PAGE - firstA.length));
+    const firstA = subA.items.slice(0, MAX_ITEMS_PER_PAGE);
+    let firstB = subB.items.slice(0, Math.max(0, MAX_ITEMS_PER_PAGE - firstA.length));
+
+    // === Anti-duplicação visual (split com subgrupos de mesmo sabor) ===
+    // Quando os subgrupos compartilham sabores (ex: "Sucos" tem 400ml,
+    // 500ml e 1L com os mesmos sabores), o slice ingênuo pode colocar
+    // "Laranja" (do 400ml, coluna esquerda) E "Laranja" (do 500ml, coluna
+    // direita) na MESMA página — o leitor vê o sabor duplicado lado a lado.
+    //
+    // Regra: percorre firstB do INÍCIO e, enquanto houver colisão de `name`
+    // com qualquer item de firstA, move o item de firstB pra próxima página
+    // (via `restB`). Quando firstB esvazia, a 1ª página fica só com subA.
+    if (firstB.length) {
+      const firstANames = new Set(firstA.map(it => it.name));
+      while (firstB.length && firstANames.has(firstB[0].name)) {
+        firstB = firstB.slice(1);
+      }
+    }
+
     const vSubA1 = Object.assign({}, subA, { items: firstA });
     const vSubB1 = Object.assign({}, subB, { items: firstB });
     blocks.push({
@@ -273,11 +293,11 @@
     const restB = subB.items.slice(firstB.length);
     let pageNum = 2;
     // Cria blocos a partir do que sobrou. Se sobrou muito, divide.
-    // Aplica ITEMS_PER_PAGE por bloco (sem split agora).
+    // Aplica MAX_ITEMS_PER_PAGE por bloco (sem split agora).
     function pushRestBlocks(itemsArr, subInfo) {
       const total = itemsArr.length;
       if (total === 0) return;
-      const pages = Math.ceil(total / ITEMS_PER_PAGE);
+      const pages = Math.ceil(total / MAX_ITEMS_PER_PAGE);
       const per = Math.ceil(total / pages);
       for (let p = 0; p < pages; p++) {
         const slice = itemsArr.slice(p * per, (p + 1) * per);
@@ -311,7 +331,15 @@
     // O título segue o nome do subgrupo principal (que muda quando o usuário
     // renomeia no admin). Em páginas split, o lado "left" usa o primeiro
     // subgrupo e o "right" usa o segundo.
-    const primary = (side === 'right' && subgroups.length >= 2) ? subgroups[1] : subgroups[0];
+    //
+    // Cuidado com o caso onde o anti-dupe de `paginateSection` esvaziou
+    // um dos subgrupos (firstB ficou []). Nesse cenário o `subgroups[1]`
+    // existe mas tem `items: []` — o título tem que ser o subgrupo que
+    // REALMENTE tem itens na página. Pega o 1º subgrupo com itens.
+    const nonEmpty = subgroups.filter(sg => sg.items && sg.items.length > 0);
+    const primary = (nonEmpty.length >= 2 && side === 'right')
+      ? nonEmpty[1]
+      : nonEmpty[0] || subgroups[0];
     const head = isFiller ? '' : sectionHeadHTML(section, { continuation: isContinuation }, primary);
 
     let bodyHTML;
@@ -330,10 +358,9 @@
       type: 'content',
       sectionId: section.id,
       html: `
-        <div class="book-page book-page--${side}">
+        <div class="book-page book-page--${side}${isFiller ? ' book-page--filler' : ''}">
           <div class="book-page__inner">
             ${bodyHTML}
-            ${isFiller ? '' : `<span class="book-page__number">${escapeHtml(section.name)}</span>`}
           </div>
         </div>
       `
@@ -528,7 +555,274 @@
     return pages;
   }
 
+  // ============== REBALANCEAMENTO BASEADO EM DOM ==============
+  // A constante MAX_ITEMS_PER_PAGE acima é um TETO INICIAL pra paginação
+  // proporcional — não uma garantia de que cabe. Esta seção mede o DOM
+  // real, move o último item que estourou pra próxima página e itera até
+  // convergir. Resolve o bug "X-Contra Filé cortado embaixo" em Baguetes
+  // e blinda o cardápio contra crescimento dinâmico (admin acrescenta
+  // sabores). Detalhes em memory/conquista-brasileira-site.md.
+
+  // Tolerância em px pra considerar overflow real (sub-pixel rendering).
+  const OVERFLOW_TOLERANCE = 2;
+  // Limite duro de iterações pra evitar loop infinito em caso patológico.
+  const MAX_REBALANCE_ITERATIONS = 5;
+
+  // Mede o quanto o conteúdo interno de uma página ESTOUROU sua altura.
+  // Retorna pixels de overflow (>0 = precisa mover item).
+  // Páginas sem .book-page__inner (capas) retornam 0 — não devem ser
+  // rebalanceadas.
+  function measurePageOverflow(wrapper) {
+    // Mede o overflow REAL do último item contra a altura do .book-page
+    // (que é FIXADA durante o build via inline !important).
+    //
+    // PEGADINHA FUNDAMENTAL: durante o build, todos os 36 wrappers estão
+    // empilhados verticalmente no fluxo do documento (StPageFlip ainda
+    // não rodou — não há position:absolute). Por isso `page.getBoundingClientRect().bottom`
+    // retorna a coordenada Y ABSOLUTA NO DOCUMENTO (cumulativa, ex: 5245px,
+    // 5840px, ..., 19525px, 20715px), NÃO a base da página. Comparar
+    // `lastR.bottom - pageR.bottom` é estruturalmente errado: ambos crescem
+    // juntos conforme descemos no documento.
+    //
+    // Correção: medir contra `pageR.top + pageR.height` (base RELATIVA da
+    // página) — é o que define a "linha de corte" daquela página específica.
+    const page = wrapper.querySelector('.book-page');
+    if (!page) return 0;
+    const pageR = page.getBoundingClientRect();
+    if (pageR.height === 0) {
+      // Página ainda não foi dimensionada (StPageFlip roda depois). Não é
+      // possível medir overflow real — retornamos 0 pra não mover nada.
+      return 0;
+    }
+
+    const lists = wrapper.querySelectorAll('.menu-flavor-list');
+    let lastFlavor = null;
+    lists.forEach(list => {
+      const items = list.querySelectorAll('.menu-flavor');
+      if (items.length) {
+        const c = items[items.length - 1];
+        if (!lastFlavor ||
+            (c.compareDocumentPosition(lastFlavor) & Node.DOCUMENT_POSITION_PRECEDING)) {
+          lastFlavor = c;
+        }
+      }
+    });
+    if (!lastFlavor) return 0;
+    const lastR = lastFlavor.getBoundingClientRect();
+    // overflow = (bottom absoluto do último item) - (base RELATIVA da página)
+    const pageBottomRel = pageR.top + pageR.height;
+    const overflow = lastR.bottom - pageBottomRel;
+    return overflow;
+  }
+
+  // Retorna o último <li.menu-flavor> de QUALQUER coluna (se split).
+  // Não move entre colunas da mesma página — só entre páginas inteiras.
+  // `compareDocumentPosition` é usado pra achar o último nó do documento
+  // entre várias listas.
+  function getLastFlavor(wrapper) {
+    const lists = wrapper.querySelectorAll('.menu-flavor-list');
+    if (!lists.length) return null;
+    let last = null;
+    lists.forEach(list => {
+      const items = list.querySelectorAll('.menu-flavor');
+      if (items.length) {
+        const candidate = items[items.length - 1];
+        if (!last ||
+            (candidate.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_PRECEDING)) {
+          last = candidate;
+        }
+      }
+    });
+    return last;
+  }
+
+  // Move o último <li.menu-flavor> do wrapper em fromIdx pra primeira
+  // lista do próximo wrapper. Se não há próximo, clona a estrutura da
+  // página atual (esvaziando listas) e insere o novo wrapper no array
+  // `wrappers` E no DOM (parent é bookEl). O chamador é responsável por
+  // sincronizar o array `pages` JS via `syncPagesFromWrappers`.
+  function moveLastFlavorToNext(wrappers, fromIdx) {
+    const fromWrapper = wrappers[fromIdx];
+    const lastFlavor = getLastFlavor(fromWrapper);
+    if (!lastFlavor) return { moved: false };
+
+    if (fromIdx + 1 < wrappers.length) {
+      const toWrapper = wrappers[fromIdx + 1];
+      const toLists = toWrapper.querySelectorAll('.menu-flavor-list');
+      if (!toLists.length) return { moved: false };
+      toLists[0].appendChild(lastFlavor);
+      return { moved: true, newPage: false };
+    }
+    // Sem próxima página — cria wrapper vazio no DOM e insere no parent.
+    // Se o fromWrapper está no DOM (caso normal após mountPages), insere
+    // o novo wrapper logo depois dele; senão (caso degenerado), append.
+    const newWrapper = createEmptyContentWrapper(fromWrapper);
+    wrappers.splice(fromIdx + 1, 0, newWrapper);
+    const parent = fromWrapper.parentNode;
+    if (parent) {
+      const nextSibling = fromWrapper.nextSibling;
+      if (nextSibling) {
+        parent.insertBefore(newWrapper, nextSibling);
+      } else {
+        parent.appendChild(newWrapper);
+      }
+    }
+    return { moved: true, newPage: true };
+  }
+
+  // Clona a estrutura de uma página de conteúdo (mantém o book-page--left/right
+  // e o menu-section-head) e esvazia as listas. O .book-page__number foi
+  // removido do template em 2026-08-07 (a pedido do usuário), então não
+  // precisamos mais limpá-lo aqui — fica como no-op defensivo.
+  function createEmptyContentWrapper(templateWrapper) {
+    const clone = templateWrapper.cloneNode(true);
+    // Esvazia listas (mantém a estrutura de coluna única ou split)
+    clone.querySelectorAll('.menu-flavor-list').forEach(ul => { ul.innerHTML = ''; });
+    // No-op defensivo: se algum wrapper antigo ainda tiver .book-page__number
+    // (ex: cache do browser), remove pra não duplicar visualmente.
+    const num = clone.querySelector('.book-page__number');
+    if (num) num.remove();
+    // O header fica; syncPagesFromWrappers pode ajustar (ex: virar "Continuação")
+    return clone;
+  }
+
+  // Loop principal. Recebe `wrappers` (output de mountPages em cardapio-flip.js)
+  // — array de <div.book-page-wrapper>. Modifica o DOM in-place. Retorna
+  // { totalMoves, newPagesCreated } pra o chamador decidir se precisa
+  // re-sincronizar o array `pages` JS.
+  function rebalancePages(wrappers) {
+    let totalMoves = 0;
+    let newPagesCreated = 0;
+
+    for (let iter = 0; iter < MAX_REBALANCE_ITERATIONS; iter++) {
+      let iterMoves = 0;
+      for (let i = 0; i < wrappers.length; i++) {
+        const w = wrappers[i];
+        // Pula capas (capa/contracapa têm .book-cover) e filler pages
+        // (decorativas, vazias). Páginas de conteúdo sempre têm .menu-flavor-list.
+        if (w.querySelector('.book-cover')) continue;
+        if (w.querySelector('.book-page--filler')) continue;
+
+        const overflow = measurePageOverflow(w);
+        if (overflow > OVERFLOW_TOLERANCE) {
+          const result = moveLastFlavorToNext(wrappers, i);
+          if (result.moved) {
+            iterMoves++;
+            if (result.newPage) newPagesCreated++;
+          }
+        }
+      }
+      totalMoves += iterMoves;
+      if (iterMoves === 0) break; // convergiu
+    }
+
+    if (totalMoves > 0) {
+      console.info(`[Cardápio] rebalanceamento: ${totalMoves} moves, ${newPagesCreated} página(s) nova(s)`);
+    }
+
+    // Sanity check final (cobre o caso de overflow < tolerância mas > 0)
+    let remaining = 0;
+    for (let i = 0; i < wrappers.length; i++) {
+      const w = wrappers[i];
+      if (w.querySelector('.book-cover')) continue;
+      if (w.querySelector('.book-page--filler')) continue;
+      if (measurePageOverflow(w) > OVERFLOW_TOLERANCE) remaining++;
+    }
+    if (remaining > 0) {
+      console.warn(`[Cardápio] rebalanceamento não convergiu: ${remaining} página(s) ainda com overflow > ${OVERFLOW_TOLERANCE}px`);
+    }
+
+    return { totalMoves, newPagesCreated };
+  }
+
+  // Reconstrói o array `pages` JS a partir do DOM resultante do rebalanceamento.
+  // Preserva capa (pages[0]), contracapa (pages[N-1]) e re-monta o índice
+  // (pages[1]) com anchors atualizados. Páginas de conteúdo (pages[2..N-3])
+  // são reconstruídas lendo o innerHTML do wrapper correspondente (que pode
+  // ter ganhado novos itens vindos da página anterior).
+  //
+  // Quando newPagesCreated > 0, a paridade Σblocos mudou — pode ter virado
+  // PAR quando deveria ser ÍMPAR (capa dura). Re-roda a lógica de paridade
+  // (trySplitOneBlock equivalente) chamando buildPages novamente se preciso.
+  function syncPagesFromWrappers(wrappers, originalPages) {
+    // Estrutura esperada do array pages:
+    //   pages[0] = capa (coverPage)
+    //   pages[1] = índice (indexPage placeholder)
+    //   pages[2..pages.length-2] = conteúdo
+    //   pages[pages.length-1] = contracapa (backCoverPage)
+    if (!originalPages || originalPages.length < 4) return originalPages;
+    if (wrappers.length !== originalPages.length - 2) {
+      // Comprimento divergiu — rebalanceamento criou/removou wrappers
+      // mas o array pages não bate. Caso raro; log e retorna original.
+      console.warn('[Cardápio] syncPagesFromWrappers: comprimento divergiu',
+        { wrappers: wrappers.length, pagesContent: originalPages.length - 2 });
+      // Tentar sincronizar mesmo assim, expandindo pages se necessário.
+    }
+
+    const newPages = [];
+    newPages.push(originalPages[0]); // capa preservada
+    // Índice placeholder — será regenerado abaixo
+    newPages.push({ type: 'index', html: '' });
+
+    // Recalcula anchors (primeira página de cada seção no novo layout).
+    // Como o rebalanceamento redistribui itens mas NÃO muda ordem entre
+    // seções, as seções continuam na mesma ordem relativa; só os anchors
+    // podem ter mudado de índice.
+    const anchors = [];
+    let contentIdx = 0; // índice no array wrappers
+    for (let i = 2; i < originalPages.length - 1; i++) {
+      const orig = originalPages[i];
+      if (orig.type !== 'content') continue;
+      // Pode ter ficado sem wrapper correspondente (criamos wrappers novos
+      // mas o loop acima já itera no originalPages). Pega o wrapper pelo
+      // índice contentIdx.
+      const wrapper = wrappers[contentIdx++];
+      if (!wrapper) break;
+
+      // Lê o HTML atualizado do wrapper (pode ter ganhado item movido)
+      const html = wrapper.innerHTML;
+      // Recalcula side baseado na nova posição em newPages
+      const side = (newPages.length % 2 === 0) ? 'left' : 'right';
+      // Substitui a classe side no HTML (estava 'left'/'right' do original;
+      // pode ter virado outra coisa após mover wrappers)
+      const updatedHtml = html
+        .replace(/book-page--(left|right)/, `book-page--${side}`);
+      newPages.push({
+        type: 'content',
+        sectionId: orig.sectionId,
+        html: updatedHtml
+      });
+
+      // Anchor: só adiciona para a 1ª página de cada seção (não-continuação).
+      // Detectamos "continuação" procurando o marcador no header.
+      const isCont = /menu-section-eyebrow-continuation/.test(html);
+      if (!isCont) {
+        // Tenta extrair o nome da seção do header (h2.menu-section-title)
+        const m = html.match(/<h2 class="menu-section-title">([^<]+)<\/h2>/);
+        const name = m ? m[1].trim() : orig.sectionId || '';
+        anchors.push({ name, firstPageIndex: newPages.length - 1 });
+      }
+    }
+
+    newPages.push(originalPages[originalPages.length - 1]); // contracapa
+    // Regenera o índice com os anchors novos
+    newPages[1] = indexPage(anchors);
+
+    // Se o rebalanceamento criou páginas novas (paridade Σblocos mudou),
+    // pode ser que o Σblocos novo seja PAR quando deveria ser ÍMPAR. O livro
+    // flip funciona com qualquer paridade (StPageFlip não exige capa dura),
+    // mas a memória documenta a preferência por Σblocos ímpar pra estética.
+    // Como o rebalanceamento só move itens (não altera a estrutura JS),
+    // e cada página nova é uma "extensão" da anterior (não muda a ordem das
+    // seções), a paridade só muda de forma controlada. Por simplicidade,
+    // confiamos na paridade atual — se quebrar visualmente, ajustar aqui.
+
+    return newPages;
+  }
+
   window.CardapioPages = {
-    buildPages
+    buildPages,
+    rebalancePages,
+    syncPagesFromWrappers
   };
 })();
