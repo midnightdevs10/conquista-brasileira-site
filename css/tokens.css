@@ -35,9 +35,10 @@
   --color-whatsapp-dark: #1DA851;
 
   /* === Tipografia ===
-     Fraunces: serifada "artisanal" de cantos macios — calor de padaria artesanal.
-     Nunito Sans: arredondada e amigável, leitura fácil. Ambas variáveis (self-hosted). */
-  --font-display: 'Fraunces', Georgia, serif;
+     Lilita One: display arredondada e simpática — cara de letreiro de
+     lanchonete/pastelaria, muito legível. Só existe no peso 400.
+     Nunito Sans: arredondada e amigável, leitura fácil (variável, self-hosted). */
+  --font-display: 'Lilita One', 'Arial Rounded MT Bold', 'Nunito Sans', sans-serif;
   --font-body: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-script: 'Pacifico', cursive;
 

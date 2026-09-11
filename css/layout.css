@@ -31,11 +31,10 @@
 }
 
 /* Telões (≥1400px): o header usa um container MAIOR que o conteúdo da
-   página — a marca encosta mais na esquerda e a nav respira mais, em vez
-   de ficar espremida no centro do monitor. calc() tapeia em viewports
-   menores que 1760+48 pra nunca estourar. */
+   página — a marca quase encosta na borda esquerda e o WhatsApp na direita
+   (mínimo 1rem de respiro da viewport). */
 @media (min-width: 1400px) {
-  .site-header .container { max-width: min(1760px, calc(100vw - 4rem)); }
+  .site-header .container { max-width: min(1840px, calc(100vw - 2rem)); }
 }
 
 .logo {
@@ -76,11 +75,18 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  /* Ocupa todo o espaço entre a marca (esquerda) e o CTA (direita). */
+  flex: 1;
+  justify-content: space-between;
 }
 .main-nav ul {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  /* Links espalhados por IGUAL no espaço do meio — o gap vira só o
+     mínimo; o space-between distribui o resto uniformemente. */
+  flex: 1;
+  justify-content: space-between;
 }
 .nav-link {
   position: relative;
