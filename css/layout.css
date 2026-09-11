@@ -75,18 +75,19 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  /* Ocupa todo o espaço entre a marca (esquerda) e o CTA (direita). */
+  /* Ocupa todo o espaço restante e EMPURRA o grupo (links + WhatsApp)
+     pra direita: [ MARCA ] ────────── [ LINKS + WHATSAPP ]. */
   flex: 1;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .main-nav ul {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  /* Links espalhados por IGUAL no espaço do meio — o gap vira só o
-     mínimo; o space-between distribui o resto uniformemente. */
-  flex: 1;
-  justify-content: space-between;
+  /* Grupo agrupado — SEM flex:1/space-between (que espalharia os links
+     pelo meio). Links nunca quebram linha: .nav-link é inline-block +
+     nowrap (regra abaixo). */
+  flex: 0 1 auto;
 }
 .nav-link {
   position: relative;
