@@ -106,9 +106,13 @@
   --gradient-overlay: linear-gradient(180deg, rgba(26, 19, 14, 0.85) 0%, rgba(26, 19, 14, 0.55) 100%);
 }
 
-/* === Telões (≥1600px): container mais largo pra não sobrar vazio gigante
-   nas laterais em monitores 1920/2560. Propaga pra TODAS as seções
-   (inclusive header) via --container. === */
+/* === Telões: container mais largo pra não sobrar vazio gigante nas
+   laterais. Dois degraus: ≥1400px cobre notebook 1080p com scaling 125%
+   (viewport CSS 1536) e monitores 1440; ≥1600px cobre 1920/2560.
+   Propaga pra TODAS as seções via --container. === */
+@media (min-width: 1400px) {
+  :root { --container: 1360px; }
+}
 @media (min-width: 1600px) {
   :root { --container: 1480px; }
 }

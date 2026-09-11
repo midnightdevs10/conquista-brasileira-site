@@ -30,11 +30,12 @@
   gap: var(--space-5);
 }
 
-/* Telões (≥1600px): o header usa um container MAIOR que o conteúdo da
+/* Telões (≥1400px): o header usa um container MAIOR que o conteúdo da
    página — a marca encosta mais na esquerda e a nav respira mais, em vez
-   de ficar espremida no centro do monitor. */
-@media (min-width: 1600px) {
-  .site-header .container { max-width: 1760px; }
+   de ficar espremida no centro do monitor. calc() tapeia em viewports
+   menores que 1760+48 pra nunca estourar. */
+@media (min-width: 1400px) {
+  .site-header .container { max-width: min(1760px, calc(100vw - 4rem)); }
 }
 
 .logo {
@@ -79,11 +80,18 @@
 .main-nav ul {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 .nav-link {
   position: relative;
-  padding: 0.5rem 1.1rem;
+  /* inline-block + nowrap OBRIGATÓRIO: inline puro fazia o ::after (barra
+     vermelha) posicionar contra o fragmento da linha (torta/desalinhada) e
+     deixava o texto do item quebrar em 2 linhas quando a nav apertava
+     (ex: "Nosso Espaço" em 1366px). Inline-block dá caixa única: barra
+     sempre centrada sob o texto, item nunca quebra. */
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0.5rem 0.95rem;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--color-ink-soft);
@@ -109,6 +117,22 @@
 
 .header-cta { padding: 0.7rem 1.2rem; font-size: 0.9rem; }
 .header-cta svg { width: 16px; height: 16px; }
+
+/* ≥1400px (header largo): nav com mais respiro entre itens — o container
+   de 1760px comporta o espaçamento generoso sem apertar. Abaixo disso a
+   base (0.95rem/4px) mantém tudo em uma linha até o hamburger (≤900px). */
+@media (min-width: 1400px) {
+  .main-nav ul { gap: var(--space-2); }
+  .nav-link { padding: 0.5rem 1.1rem; }
+}
+
+/* 901–1200px (notebooks/tablet landscape): container do header é o padrão
+   (1200px) e a nav fica justa — esconde o texto da marca (fica só a logo)
+   e compacta os itens pra caber sem quebrar. */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .logo-text { display: none; }
+  .nav-link { padding: 0.5rem 0.8rem; }
+}
 
 /* Menu mobile toggle */
 .menu-toggle {
@@ -182,15 +206,25 @@
   gap: var(--space-7);
   align-items: center;
 }
+/* Hero usa container PRÓPRIO, mais largo que o das seções: é a capa do site
+   (banda escura full-bleed), merece conteúdo mais encostado nas margens —
+   em notebook 1080p (viewport 1536 c/ scaling 125%) o container padrão de
+   1200px deixava ~240px de vazio até o texto. max() mantém o piso do
+   --container; min() tapeia em 1720px e nunca deixa tocar as bordas. */
+@media (min-width: 900px) {
+  .hero-content { max-width: max(var(--container), min(1720px, calc(100vw - 8rem))); }
+}
 /* Texto levemente empurrado pra direita (sem tocar no limite do container).
    O clamp TAPEIA o empurrão em telões: 6vw em 2560px viraria 153px de
    recuo — o texto ficava "flutuando" longe da margem esquerda. */
 .hero-content > .hero-text-block {
   padding-left: clamp(var(--space-3), 4vw, var(--space-7));
 }
-/* Imagem levemente empurrada pra esquerda (sai um pouco pra fora) */
+/* Imagem levemente empurrada pra esquerda (sai um pouco pra fora).
+   Máximo -24px: mais que isso e o canto da foto rotacionada em -3° encosta
+   na cauda do título em 1366-1536px (bounding box da rotação vaza ~12px). */
 .hero-content > .hero-floating {
-  margin-left: clamp(-48px, -3vw, -12px);
+  margin-left: clamp(-24px, -2vw, -8px);
   max-width: 460px;
   margin-top: 0;
 }
@@ -200,7 +234,7 @@
    ("...Pastéis") em 2560px. DEPOIS da regra base (mesma especificidade:
    quem vem depois no arquivo ganha). */
 @media (min-width: 1600px) {
-  .hero-content > .hero-floating { max-width: 540px; margin-left: -24px; }
+  .hero-content > .hero-floating { max-width: 600px; margin-left: -24px; }
 }
 
 .hero-eyebrow {
@@ -234,6 +268,17 @@
   margin-bottom: var(--space-5);
   color: #fff;
   max-width: 820px;
+}
+/* ≥901px: título escala SUAVEMENTE com a viewport em vez de usar o teto
+   fixo de 92px (--fs-5xl). A 1ª linha ("Os Melhores Pastéis", que tem <br>
+   explícito antes de "de Cajamar") precisa de ~778px a 92px — a coluna do
+   grid em 1366-1600 só tem 680-780px, então o título quebrava em 3-4
+   linhas com o "Os" / "Pastéis" órfãos. A fórmula garante que a 1ª linha
+   caiba na coluna em toda largura (verificado por medição: 92px=778px,
+   88px=746, 84px=720, 80px=700, 76px=678). Mobile (≤900 e overrides
+   ≤560/≤380 em responsive.css) fica intocado. */
+@media (min-width: 901px) {
+  .hero-title { font-size: clamp(2.6rem, 6.6vw - 22px, 5.75rem); }
 }
 .hero-title .text-accent {
   color: var(--color-secondary);
