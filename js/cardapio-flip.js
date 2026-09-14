@@ -357,7 +357,10 @@
       minHeight: mobileMinH,
       maxHeight: 1400,
       drawShadow: true,
-      flippingTime: reduced ? 0 : 700,
+      // 500ms em retrato (celular): aparelhos mais fracos não acompanham
+      // os 700ms sem engasgar — fica mais leve E mais ágil de folhear.
+      // Desktop/tablet mantém 700ms.
+      flippingTime: reduced ? 0 : (usePortrait ? 500 : 700),
       usePortrait,
       startZIndex: 0,
       // autoSize DESLIGADO: a StPageFlip estava recalculando errado a
