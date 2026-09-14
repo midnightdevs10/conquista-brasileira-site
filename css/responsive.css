@@ -279,7 +279,7 @@
   /* Botões flutuantes do lightbox: um pouco menores pra não cobrir foto */
   .lightbox-close, .lightbox-prev, .lightbox-next { width: 40px; height: 40px; font-size: 1.2rem; }
   .lightbox-close { top: 16px; right: 16px; }
-  .lightbox-prev, .lightbox-next { top: 50%; }
+  .lightbox-prev, .lightbox-next { top: auto; bottom: 3vh; }
 }
 
 /* === Landscape / telas muito altas === */

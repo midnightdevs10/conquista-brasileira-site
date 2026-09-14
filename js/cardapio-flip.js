@@ -96,8 +96,17 @@
     });
   }
 
-  // ============== Click em sabores (reusa padrão do main.js antigo) ==============
+  // ============== Click em sabores ==============
+  // A ação de pedir fica SÓ no texto do produto (nome/descrição) —
+  // clicar na linha inteira não abre mais nada, pra não ir pro
+  // WhatsApp num toque acidental ao arrastar. Arrastar por cima do
+  // card vira a página: o page-flip é bloqueado no card (stopPropagation
+  // no pointerdown, pra um clique simples nunca folhear sozinho) e o
+  // próprio card gerencia o gesto de swipe com threshold fixo.
   function bindFlavorClicks() {
+    const TEXT_SEL = '.menu-flavor-name-text, .menu-flavor-desc';
+    const SWIPE_DISTANCE = 30; // mesma distância do swipe da lib
+
     document.querySelectorAll('.menu-flavor').forEach(card => {
       const data = {
         name: card.dataset.itemName,
@@ -108,11 +117,8 @@
         hasContext: card.dataset.itemContext === '1',
         tag: card.dataset.itemTag || ''
       };
-      // Handler único — usado tanto pra click quanto pra mousedown/keydown.
-      // O segredo pra NÃO virar a página ao clicar num sabor é capturar o
-      // evento em FASE DE CAPTURA (capture: true) e chamar stopPropagation
-      // no mousedown ANTES do page-flip processar. Sem isso, o page-flip
-      // (que escuta mousedown no container .book) inicia o flip.
+      const whatsapp = (window.SITE_CONFIG && window.SITE_CONFIG.company && window.SITE_CONFIG.company.whatsapp) || '';
+
       const open = (e) => {
         // Se for um link/button interno (ex: WhatsApp), não intercepta
         if (e && e.target.closest('a, button.menu-flavor-tag')) return;
@@ -123,15 +129,81 @@
         if (data.hasContext) {
           openItemModal(data);
         } else {
-          const whatsapp = (window.SITE_CONFIG && window.SITE_CONFIG.company && window.SITE_CONFIG.company.whatsapp) || '';
           window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(buildOrderMessage(data.order, data.name))}`, '_blank', 'noopener');
         }
       };
-      // Fase de captura (true) — recebe o evento antes do page-flip.
-      // mousedown é o evento que o page-flip usa pra iniciar o flip.
-      card.addEventListener('mousedown', open, true);
-      card.addEventListener('touchstart', open, true);
-      card.addEventListener('click', open);
+
+      // --- gesto: arrastar vira página; tocar sem arrastar, só o texto abre ---
+      let gesture = null; // { x, y, flipped }
+      const onDown = (e) => {
+        // Bloqueia o page-flip (que escuta mousedown/touchstart no
+        // container .book) — o card gerencia o próprio gesto.
+        e.stopPropagation();
+        // Sem preventDefault no touchstart: o scroll vertical da página
+        // precisa continuar vivendo quando o toque cai num produto.
+        if (!e.touches) e.preventDefault(); // mouse: evita selecionar texto no drag
+        const p = e.touches ? e.touches[0] : e;
+        gesture = { x: p.clientX, y: p.clientY, flipped: false };
+        bindWindow();
+      };
+      const onMove = (e) => {
+        if (!gesture) return;
+        // Já virou: segura o scroll vertical até o gesto terminar
+        if (gesture.flipped) {
+          if (e.cancelable) e.preventDefault();
+          return;
+        }
+        const p = e.touches ? e.touches[0] : e;
+        if (!p) return;
+        const dx = p.clientX - gesture.x;
+        if (Math.abs(dx) < SWIPE_DISTANCE) return;
+        gesture.flipped = true;
+        e.preventDefault(); // trava o scroll vertical durante a virada
+        if (!pageFlipInstance) return;
+        try {
+          if (dx < 0) pageFlipInstance.flipNext();
+          else pageFlipInstance.flipPrev();
+        } catch (err) {
+          console.warn('[Cardápio] erro ao virar página:', err);
+        }
+      };
+      const onUp = () => {
+        if (gesture && gesture.flipped) {
+          // Suprime o click sintético pós-drag (mesma técnica do marquee
+          // em main.js, que marca dataset.dragging)
+          card.dataset.gestureDragged = '1';
+          setTimeout(() => { delete card.dataset.gestureDragged; }, 100);
+        }
+        gesture = null;
+        unbindWindow();
+      };
+      const bindWindow = () => {
+        window.addEventListener('mousemove', onMove, true);
+        window.addEventListener('mouseup', onUp, true);
+        window.addEventListener('touchmove', onMove, { capture: true, passive: false });
+        window.addEventListener('touchend', onUp, true);
+        window.addEventListener('touchcancel', onUp, true);
+      };
+      const unbindWindow = () => {
+        window.removeEventListener('mousemove', onMove, true);
+        window.removeEventListener('mouseup', onUp, true);
+        window.removeEventListener('touchmove', onMove, { capture: true, passive: false });
+        window.removeEventListener('touchend', onUp, true);
+        window.removeEventListener('touchcancel', onUp, true);
+      };
+
+      // Fase de captura (true) — recebe o evento antes do page-flip,
+      // que usa o mousedown/touchstart pra iniciar o folhear.
+      card.addEventListener('mousedown', onDown, true);
+      card.addEventListener('touchstart', onDown, true);
+
+      card.addEventListener('click', (e) => {
+        // Arrasto de virar página solta um click sintético — ignora
+        if (card.dataset.gestureDragged === '1') return;
+        // Abre somente clicando DIRETAMENTE no texto do produto
+        if (!e.target.closest(TEXT_SEL)) return;
+        open(e);
+      });
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
