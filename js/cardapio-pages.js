@@ -1,5 +1,5 @@
 /* ================================================================
-   CARDAPIO-PAGES - Conquista Brasileira Pastelaria
+   CARDAPIO-PAGES - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Converte o array de SEÇÕES (vindo de cardapio-data) em objetos
    "página" — cada página com seu HTML pronto pra StPageFlip.
    ================================================================ */
@@ -127,7 +127,7 @@
           <div class="book-cover">
             <img
               src="${escapeHtml(logo)}"
-              alt="Logo Conquista Brasileira Pastelaria"
+              alt="Logo Conquista Brasileira Ind e Com de Doces e Salgados Ltda"
               class="book-cover__logo"
               loading="eager"
               decoding="async"

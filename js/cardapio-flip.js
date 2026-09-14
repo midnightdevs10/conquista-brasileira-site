@@ -1,5 +1,5 @@
 /* ================================================================
-   CARDAPIO-FLIP - Conquista Brasileira Pastelaria
+   CARDAPIO-FLIP - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Wrapper do StPageFlip. Inicializa o livro, conecta controles
    (botões, teclado, swipe via lib, links do sumário), reusa o
    modal #paste-modal, e gerencia resize / reduced-motion.

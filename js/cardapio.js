@@ -1,5 +1,5 @@
 /* ================================================================
-   CARDÁPIO - Conquista Brasileira Pastelaria
+   CARDÁPIO - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Entry point. Escuta o evento `site:config-ready` (disparado por
    data.js após o config.json ser carregado) e inicializa o livro.
 

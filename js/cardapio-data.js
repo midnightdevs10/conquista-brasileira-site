@@ -1,5 +1,5 @@
 /* ================================================================
-   CARDAPIO-DATA - Conquista Brasileira Pastelaria
+   CARDAPIO-DATA - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Normaliza o menu do config.json numa estrutura de PÁGINAS
    do livro. Sem inventar nada: só reordena, reagrupa subgrupos
    do mesmo "tipo" e devolve um array pronto para virar HTML.

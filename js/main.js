@@ -1,5 +1,5 @@
 /* ================================================================
-   MAIN - Conquista Brasileira Pastelaria
+   MAIN - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Lógica principal: navegação, animações, galeria (lightbox),
    FAQ, horários, carrosséis, contato, header.
    (Cardápio: ver js/cardapio*.js)

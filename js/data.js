@@ -1,5 +1,5 @@
 /* ================================================================
-   DATA - Conquista Brasileira Pastelaria
+   DATA - Conquista Brasileira Ind e Com de Doces e Salgados Ltda
    Configuração embutida (site 100% estático — sem painel admin).
    Pra mudar dados da empresa (telefone, endereço, horários, cardápio),
    edite diretamente este arquivo. A estrutura das seções fica em js/cardapio-data.js.
@@ -10,7 +10,7 @@
 
   const SITE_CONFIG = {
     company: {
-      name: 'Conquista Brasileira Pastelaria',
+      name: 'Conquista Brasileira Ind e Com de Doces e Salgados Ltda',
       shortName: 'Conquista Brasileira',
       tagline: 'Os Melhores Pastéis de Cajamar',
       city: 'Cajamar',
@@ -29,13 +29,13 @@
       }
     },
     seo: {
-      title: 'Conquista Brasileira Pastelaria | Cajamar SP',
+      title: 'Conquista Brasileira Ind e Com de Doces e Salgados Ltda | Cajamar SP',
       description: 'Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.',
       keywords: 'pastelaria cajamar, pastel em cajamar, delivery cajamar, pastel brasileiro',
       schema: {
         '@context': 'https://schema.org',
         '@type': 'Restaurant',
-        name: 'Conquista Brasileira Pastelaria',
+        name: 'Conquista Brasileira Ind e Com de Doces e Salgados Ltda',
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Cajamar',
@@ -179,7 +179,7 @@
     gallery: [
       {
         src: 'assets/images/quarta-almoco.jpg',
-        alt: 'Fachada da Conquista Brasileira Pastelaria em Cajamar',
+        alt: 'Fachada da Conquista Brasileira Ind e Com de Doces e Salgados Ltda em Cajamar',
         caption: 'Nossa Casa',
         description: 'A fachada que já virou ponto de referência no Polvilho.'
       },
@@ -216,7 +216,7 @@
     },
     about: {
       paragraphs: [
-        'A **Conquista Brasileira Pastelaria** nasceu em Cajamar com uma missão simples: fazer o pastel que a gente gostaria de encontrar — com massa crocante, recheio generoso e aquele sabor que lembra casa de avó.',
+        'A **Conquista Brasileira Ind e Com de Doces e Salgados Ltda** nasceu em Cajamar com uma missão simples: fazer o pastel que a gente gostaria de encontrar — com massa crocante, recheio generoso e aquele sabor que lembra casa de avó.',
         'Trabalhamos com ingredientes frescos, selecionados todo dia, e uma massa que é a nossa marca registrada. Seja no balcão, no delivery ou no nosso salão, o objetivo é o mesmo: **cuidar de cada pedido como se fosse para a nossa própria família**.',
         'Aqui você encontra os clássicos que todo mundo ama, as receitas autorais da casa, opções doces irresistíveis, marmitex executiva de segunda a sexta e a nossa **Sexta da Conquista** — um dia especial que já virou tradição entre os clientes.'
       ],
@@ -227,7 +227,7 @@
       ],
       sticker: { prefix: 'desde', year: 2018, suffix: 'Cajamar / SP' },
       images: {
-        main: { src: 'assets/images/quarta-almoco.jpg', alt: 'Fachada da Conquista Brasileira Pastelaria em Cajamar' },
+        main: { src: 'assets/images/quarta-almoco.jpg', alt: 'Fachada da Conquista Brasileira Ind e Com de Doces e Salgados Ltda em Cajamar' },
         sub: { src: 'assets/images/interior.jpg', alt: 'Ambiente da Conquista Brasileira' }
       }
     },
