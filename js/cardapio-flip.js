@@ -33,7 +33,9 @@
   let lastScrollPageWidth = 0;
 
   // ============== Modal reuso (mesmo padrão do main.js antigo) ==============
-  function openItemModal({ name, description, includes, category }) {
+  // order = frase do produto (ex: "um pastel de") que a página carrega no
+  // data-item-order — vira "gostaria de pedir um pastel de X" no WhatsApp.
+  function openItemModal({ name, description, includes, category, order }) {
     const modal = document.getElementById('paste-modal');
     if (!modal) return;
     const mTitle = document.getElementById('paste-modal-title');
@@ -62,11 +64,17 @@
       mIncludes.innerHTML = '';
       mIncludes.hidden = true;
     }
-    mCta.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá, gostaria de pedir: ' + name)}`;
+    mCta.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(buildOrderMessage(order, name))}`;
     modal.removeAttribute('hidden');
     document.body.style.overflow = 'hidden';
     const closeBtn = modal.querySelector('.paste-modal-close');
     if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
+  }
+
+  function buildOrderMessage(order, name) {
+    return order
+      ? 'Olá, gostaria de pedir ' + order + ' ' + name
+      : 'Olá, gostaria de pedir: ' + name;
   }
 
   function closeItemModal() {
@@ -95,6 +103,7 @@
         name: card.dataset.itemName,
         description: card.dataset.itemDesc,
         category: card.dataset.itemCategory,
+        order: card.dataset.itemOrder || '',
         includes: card.dataset.itemIncludes ? JSON.parse(card.dataset.itemIncludes) : null,
         hasContext: card.dataset.itemContext === '1',
         tag: card.dataset.itemTag || ''
@@ -115,7 +124,7 @@
           openItemModal(data);
         } else {
           const whatsapp = (window.SITE_CONFIG && window.SITE_CONFIG.company && window.SITE_CONFIG.company.whatsapp) || '';
-          window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá, gostaria de pedir: ' + data.name)}`, '_blank', 'noopener');
+          window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(buildOrderMessage(data.order, data.name))}`, '_blank', 'noopener');
         }
       };
       // Fase de captura (true) — recebe o evento antes do page-flip.

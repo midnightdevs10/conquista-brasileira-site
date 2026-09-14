@@ -19,6 +19,41 @@
   // folga pra descrições longas sem forçar páginas extras.
   const MAX_ITEMS_PER_PAGE = 12;
 
+  // ============== Frase do pedido por produto (WhatsApp) ==============
+  // Cada sabor vira "Olá, gostaria de pedir {frase} {sabor}" no WhatsApp
+  // (ex: "um pastel de Calabresa" em vez de só "Calabresa"). Chave
+  // 'gid.sgid'; cai pro fallback do grupo (só 'gid') se o subgrupo não
+  // estiver listado. Frases terminando em ":" ficam "pedir um salgado: Kibe".
+  const ORDER_PHRASES = {
+    'pasteis.tradicionais': 'um pastel de',
+    'pasteis.especiais-1': 'um pastel de',
+    'pasteis.especiais-2': 'um pastel de',
+    'pasteis.especiais-3': 'um pastel de',
+    'pasteis.especiais-4': 'um pastel de',
+    'pasteis.doces': 'um pastel doce de',
+    'salgados': 'um salgado frito:',
+    'mini.pronta-entrega': 'um mini salgado:',
+    'mini.sob-encomenda': 'um mini salgado (sob encomenda):',
+    'mini.mini-pasteis-salgados': 'um mini pastel de',
+    'mini.mini-pasteis-doces': 'um mini pastel doce de',
+    'mini.combos': 'o',
+    'sucos.400ml': 'um suco de 400ml de',
+    'sucos.500ml': 'um suco de 500ml de',
+    'sucos.1l': 'um suco de 1 litro de',
+    'bebidas': 'uma bebida:',
+    'lanches.baguete': 'uma baguete:',
+    'lanches': 'um lanche:',
+    'beirutes': 'um beirute de',
+    'hot-dogs': 'um hot dog:',
+    'pao-de-metro': 'um pão de metro:'
+  };
+
+  function orderPrefix(subgroup) {
+    if (!subgroup) return '';
+    const full = subgroup.groupId + '.' + subgroup.subgroupId;
+    return ORDER_PHRASES[full] || ORDER_PHRASES[subgroup.groupId] || '';
+  }
+
   // ============== Helpers ==============
 
   function sectionHeadHTML(section, opts, primarySubgroup) {
@@ -80,6 +115,7 @@
           data-item-name="${escapeHtml(item.name)}"
           data-item-desc="${escapeHtml(item.description || '')}"
           data-item-category="${escapeHtml(subgroup.groupName)} · ${escapeHtml(subgroup.subgroupName)}"
+          data-item-order="${escapeHtml(orderPrefix(subgroup))}"
           data-item-tag="${escapeHtml(item.tag || '')}"
           data-item-context="${hasContext ? '1' : '0'}"
           data-item-includes='${hasIncludes ? escapeHtml(JSON.stringify(item.includes)) : ''}'
