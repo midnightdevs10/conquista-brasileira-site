@@ -176,13 +176,19 @@
 .instagram-float:hover { transform: scale(1.08); }
 
 /* === Diferenciais (cards) === */
+/* Flex (não grid) pra centralizar a última linha incompleta: com grid
+   auto-fit, 6 cards em 4 colunas deixam a sobra encostada na esquerda.
+   Cards crescem de 280px até 340px e a linha sobra CENTRALIZADA. */
 .differentials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-5);
 }
 
 .diff-card {
+  flex: 1 0 280px;
+  max-width: 340px;
   background: var(--color-paper);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);

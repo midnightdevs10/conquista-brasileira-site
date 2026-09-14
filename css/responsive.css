@@ -199,6 +199,7 @@
   .btn-xl { padding: 1.1rem 1.5rem; font-size: var(--fs-base); }
 
   .differentials-grid { grid-template-columns: 1fr; }
+  .diff-card { flex-basis: 100%; max-width: none; }
 
   /* (hero-badges 2x2 já foi promovido pra breakpoint 768px — sem
      override adicional aqui pra evitar duplicação.) */
