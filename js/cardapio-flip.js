@@ -105,7 +105,8 @@
   // próprio card gerencia o gesto de swipe com threshold fixo.
   function bindFlavorClicks() {
     const TEXT_SEL = '.menu-flavor-name-text, .menu-flavor-desc';
-    const SWIPE_DISTANCE = 30; // mesma distância do swipe da lib
+    const SWIPE_DISTANCE = 20;  // distância pra a 1ª virada (leve)
+    const SWIPE_STEP = 60;      // px de arrasto pra cada virada extra no mesmo gesto
 
     document.querySelectorAll('.menu-flavor').forEach(card => {
       const data = {
@@ -148,17 +149,30 @@
       };
       const onMove = (e) => {
         if (!gesture) return;
-        // Já virou: segura o scroll vertical até o gesto terminar
-        if (gesture.flipped) {
-          if (e.cancelable) e.preventDefault();
-          return;
-        }
         const p = e.touches ? e.touches[0] : e;
         if (!p) return;
+        // Já em virada: segura o scroll vertical e segue virando
+        // conforme o arrasto avança — um gesto longo passa várias
+        // páginas sem precisar soltar e arrastar de novo.
+        if (gesture.flipped) {
+          if (e.cancelable) e.preventDefault();
+          if (!pageFlipInstance) return;
+          const step = p.clientX - gesture.lastFlipX;
+          if (Math.abs(step) < SWIPE_STEP) return;
+          gesture.lastFlipX = p.clientX;
+          try {
+            if (step < 0) pageFlipInstance.flipNext();
+            else pageFlipInstance.flipPrev();
+          } catch (err) {
+            console.warn('[Cardápio] erro ao virar página:', err);
+          }
+          return;
+        }
         const dx = p.clientX - gesture.x;
         if (Math.abs(dx) < SWIPE_DISTANCE) return;
         gesture.flipped = true;
-        e.preventDefault(); // trava o scroll vertical durante a virada
+        gesture.lastFlipX = p.clientX;
+        if (e.cancelable) e.preventDefault(); // trava o scroll durante a virada
         if (!pageFlipInstance) return;
         try {
           if (dx < 0) pageFlipInstance.flipNext();

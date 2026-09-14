@@ -22,6 +22,12 @@
   position: relative;
   width: 100%;
   max-width: 850px;
+  /* Gestos horizontais pertencem ao cardápio (virar página — lib e
+     swipe próprio dos cards): sem isso o browser roubava o touchmove
+     no meio do arrasto (tocava a rolagem vertical e disparava
+     touchcancel), e a virada "não saía" — tinha que arrastar várias
+     vezes. pan-y mantém a rolagem vertical natural da página. */
+  touch-action: pan-y;
   /* StPageFlip define a altura via size:'stretch', mas em landscape
      o pai precisa de uma altura definida. Damos um aspect-ratio
      aproximado e a biblioteca ajusta. */
