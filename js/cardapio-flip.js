@@ -107,6 +107,7 @@
     const TEXT_SEL = '.menu-flavor-name-text, .menu-flavor-desc';
     const SWIPE_DISTANCE = 20;  // distância pra a 1ª virada (leve)
     const SWIPE_STEP = 60;      // px de arrasto pra cada virada extra no mesmo gesto
+    const AXIS_LOCK = 10;       // zona morta antes de decidir o eixo do gesto
 
     document.querySelectorAll('.menu-flavor').forEach(card => {
       const data = {
@@ -148,12 +149,11 @@
         bindWindow();
       };
       const onMove = (e) => {
-        if (!gesture) return;
+        if (!gesture || gesture.ignored) return;
         const p = e.touches ? e.touches[0] : e;
         if (!p) return;
-        // Já em virada: segura o scroll vertical e segue virando
-        // conforme o arrasto avança — um gesto longo passa várias
-        // páginas sem precisar soltar e arrastar de novo.
+        // Já em virada: segue virando a cada SWIPE_STEP px de arrasto
+        // lateral — o scroll vertical fica travado até soltar o dedo.
         if (gesture.flipped) {
           if (e.cancelable) e.preventDefault();
           if (!pageFlipInstance) return;
@@ -168,7 +168,20 @@
           }
           return;
         }
+
+        // Trava de eixo: a PRIMEIRA intenção dominante do dedo decide.
+        // Vertical = rolagem da PÁGINA (o browser cuida — o .book tem
+        // touch-action: pan-y, aqui não interferimos); horizontal =
+        // virada do cardápio. Antes só o dx contava: rolagem vertical
+        // com qualquer deriva lateral do dedo virava a página e
+        // travava a rolagem da página.
         const dx = p.clientX - gesture.x;
+        const dy = p.clientY - gesture.y;
+        if (Math.abs(dx) < AXIS_LOCK && Math.abs(dy) < AXIS_LOCK) return;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          gesture.ignored = true; // é rolagem vertical — deixa rolar
+          return;
+        }
         if (Math.abs(dx) < SWIPE_DISTANCE) return;
         gesture.flipped = true;
         gesture.lastFlipX = p.clientX;
