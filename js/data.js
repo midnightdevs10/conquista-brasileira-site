@@ -165,7 +165,7 @@
       },
       {
         question: 'Qual o horário de funcionamento?',
-        answer: "Atendemos de terça a domingo, com horários especiais para almoço (quarta e sexta) e jantar. Confira a aba 'Horário' para os detalhes do nosso funcionamento."
+        answer: "Atendemos de domingo a domingo. Confira a aba 'Horário' para os detalhes do funcionamento."
       },
       {
         question: 'O pastel é feito na hora?',
@@ -173,7 +173,7 @@
       },
       {
         question: 'Atendem com marmitex?',
-        answer: 'Sim, nas segundas e nos dias de semana oferecemos a opção de marmitex executiva com comida caseira. Consulte o cardápio do dia pelo WhatsApp.'
+        answer: 'Sim! Atendemos empresas de domingo a domingo e clientes em geral de segunda a sábado com marmitex executiva. Consulte o cardápio do dia pelo WhatsApp.'
       }
     ],
     gallery: [
@@ -216,9 +216,9 @@
     },
     about: {
       paragraphs: [
-        'A **Conquista Brasileira Ind e Com de Doces e Salgados Ltda** nasceu em Cajamar com uma missão simples: fazer o pastel que a gente gostaria de encontrar — com massa crocante, recheio generoso e aquele sabor que lembra casa de avó.',
+        'A **Conquista Brasileira** nasceu em Cajamar com uma missão simples: fazer o pastel que a gente gostaria de encontrar — com massa crocante, recheio generoso e aquele sabor que lembra casa de avó.',
         'Trabalhamos com ingredientes frescos, selecionados todo dia, e uma massa que é a nossa marca registrada. Seja no balcão, no delivery ou no nosso salão, o objetivo é o mesmo: **cuidar de cada pedido como se fosse para a nossa própria família**.',
-        'Aqui você encontra os clássicos que todo mundo ama, as receitas autorais da casa, opções doces irresistíveis, marmitex executiva de segunda a sexta e a nossa **Sexta da Conquista** — um dia especial que já virou tradição entre os clientes.'
+        'Aqui você encontra os clássicos que todo mundo ama, as receitas autorais da casa, opções doces irresistíveis, marmitex executiva de segunda a sexta.'
       ],
       features: [
         { title: 'Receita autoral', description: 'Massa e recheios próprios, desenvolvidos com técnica e capricho.' },

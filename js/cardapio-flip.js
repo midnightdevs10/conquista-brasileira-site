@@ -142,13 +142,29 @@
   }
 
   // ============== Botões e indicador ==============
+  // O indicador e o estado (disabled) dos botões contam SPREADS (duplas
+  // de páginas no desktop; 1 página por spread no mobile). Antes usávamos
+  // índice de PÁGINA: com o livro 2-up, flip(página+1) caía no MESMO
+  // spread já visível e a lib ignorava o comando — as setas do
+  // computador "não respondiam".
   function updateIndicator(idx) {
     if (!indicatorEl) return;
-    const cur = idx + 1; // humano (1-based)
-    const total = pageFlipInstance ? pageFlipInstance.getPageCount() : currentPages.length;
-    indicatorEl.innerHTML = `<strong>${String(cur).padStart(2, '0')}</strong> / ${String(total).padStart(2, '0')}`;
-    if (prevBtnEl) prevBtnEl.disabled = (idx <= 0);
-    if (nextBtnEl) nextBtnEl.disabled = (idx >= total - 1);
+    let cur = idx; // fallback: índice de página (mobile 1-up = spread)
+    let total = pageFlipInstance ? pageFlipInstance.getPageCount() : currentPages.length;
+    // StPageFlip expõe a coleção de páginas: getSpread() devolve as
+    // duplas e getCurrentSpreadIndex() a posição atual — com eles o
+    // indicador e o disable batem exatamente com o que flipNext/
+    // flipPrev percorrem (1 spread por clique).
+    try {
+      const col = pageFlipInstance && pageFlipInstance.getPageCollection ? pageFlipInstance.getPageCollection() : null;
+      if (col && typeof col.getSpread === 'function') {
+        cur = col.getCurrentSpreadIndex();
+        total = col.getSpread().length;
+      }
+    } catch (_) { /* mantém fallback por página */ }
+    indicatorEl.innerHTML = `<strong>${String(cur + 1).padStart(2, '0')}</strong> / ${String(total).padStart(2, '0')}`;
+    if (prevBtnEl) prevBtnEl.disabled = (cur <= 0);
+    if (nextBtnEl) nextBtnEl.disabled = (cur >= total - 1);
   }
 
   // Centraliza o `.book` na viewport quando uma página vira. Sem isso, em
@@ -181,19 +197,17 @@
     nextBtnEl = document.getElementById('book-next');
     indicatorEl = document.getElementById('book-indicator');
 
-    // Handler único que usa flip(idx) — método mais robusto que flipPrev/flipNext
-    // pois vai direto pra um índice, sem depender de eventos internos da página
-    // (que podem ter timing variável após o build). Lemos o índice atual e
-    // saltamos pra +/-1.
+    // Handler único baseado em flipNext/flipPrev — a lib avança/retorna
+    // 1 SPREAD por chamada. (flip(página) era no-op quando a página-alvo
+    // pertencia ao spread já visível — causa das setas mortas no PC.)
+    // flipNext/flipPrev são no-ops seguros nos extremos (checkDirection).
     const go = (delta) => (e) => {
       e.preventDefault();
       e.stopPropagation();
       if (!pageFlipInstance) return;
       try {
-        const cur = pageFlipInstance.getCurrentPageIndex() || 0;
-        const total = pageFlipInstance.getPageCount();
-        const next = Math.max(0, Math.min(total - 1, cur + delta));
-        if (next !== cur) pageFlipInstance.flip(next);
+        if (delta < 0) pageFlipInstance.flipPrev();
+        else pageFlipInstance.flipNext();
       } catch (err) {
         console.warn('[Cardápio] erro ao virar página:', err);
       }
@@ -262,6 +276,18 @@
         }
 
         if (pageFlipInstance) {
+          // Mesma raiz do bug das setas: flip(página) é no-op quando a
+          // página-alvo pertence ao spread já visível. Convertemos o
+          // índice de página pro índice da 1ª página do spread dele
+          // antes de flip().
+          try {
+            const col = pageFlipInstance.getPageCollection();
+            const targetSpread = col.getSpreadIndexByPage(idx);
+            if (targetSpread !== null && targetSpread !== undefined && targetSpread !== col.getCurrentSpreadIndex()) {
+              const spread = col.getSpread()[targetSpread];
+              if (spread && typeof spread[0] === 'number') idx = spread[0];
+            }
+          } catch (_) { /* usa o idx original */ }
           pageFlipInstance.flip(idx);
         }
       }, true);
