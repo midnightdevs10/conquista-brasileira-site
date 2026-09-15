@@ -106,6 +106,28 @@
 .stf__item.--left  { box-shadow: inset -8px 0 14px -8px rgba(31, 26, 23, 0.18), 1px 0 0 0 #0c0a09; }
 .stf__item.--right { box-shadow: inset  8px 0 14px -8px rgba(31, 26, 23, 0.18), -1px 0 0 0 #0c0a09; }
 
+/* === Livro FECHADO: capa centralizada (sem bloco vazio à esquerda) ===
+   Com showCover:true, a StPageFlip renderiza o fechamento como o spread
+   [0]: a capa fica na METADE DIREITA do container e a metade esquerda
+   vira um retângulo vazio sombreado (o "bloco invisível" que aparecia
+   antes de abrir o cardápio). No estado fechado (classe .book--closed,
+   controlada pelo cardapio-flip.js) a capa é CENTRALIZADA — left: 25%,
+   mantendo a largura inline da lib — e a sombra do .book passa pra
+   própria capa, pra não sobrar o retângulo fantasma atrás.
+   A abertura é sequenciada no JS: a capa desliza pra posição nativa
+   (.book--settling, 350ms) e só então o StPageFlip folhea. */
+.book--closed { box-shadow: none; }
+.book--closed .stf__item {
+  left: 25% !important;
+  box-shadow:
+    inset 8px 0 14px -8px rgba(31, 26, 23, 0.18),
+    -1px 0 0 0 #0c0a09,
+    0 30px 60px rgba(31, 26, 23, 0.22),
+    0 8px 16px rgba(31, 26, 23, 0.12);
+}
+.book--settling { transition: box-shadow 0.35s ease; }
+.book--settling .stf__item { transition: left 0.35s ease, box-shadow 0.35s ease; }
+
 /* === Páginas filler (paridade do StPageFlip) ===
    A regra `trySplitOneBlock` em cardapio-pages.js divide a maior seção
    possível pra manter a paridade; quando NÃO sobra nenhuma seção com

@@ -31,6 +31,9 @@
   let indicatorEl = null;
   let currentBreakpoint = null;
   let lastScrollPageWidth = 0;
+  // Estado "livro fechado" (capa centralizada — ver syncClosedState)
+  let closedState = false;
+  let openPending = false;
 
   // ============== Modal reuso (mesmo padrão do main.js antigo) ==============
   // order = frase do produto (ex: "um pastel de") que a página carrega no
@@ -304,6 +307,8 @@
       e.preventDefault();
       e.stopPropagation();
       if (!pageFlipInstance) return;
+      // Fechado: o "próxima" passa pela sequência de abertura (slide+flip)
+      if (delta > 0 && closedState) { openFromClosed(); return; }
       try {
         if (delta < 0) pageFlipInstance.flipPrev();
         else pageFlipInstance.flipNext();
@@ -340,9 +345,9 @@
       if (!pageFlipInstance) return;
 
       if (e.key === 'ArrowLeft') { e.preventDefault(); pageFlipInstance.flipPrev(); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); pageFlipInstance.flipNext(); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); if (closedState) openFromClosed(); else pageFlipInstance.flipNext(); }
       else if (e.key === 'Home') { e.preventDefault(); pageFlipInstance.turnToPage(0); }
-      else if (e.key === 'End') { e.preventDefault(); pageFlipInstance.turnToPage(pageFlipInstance.getPageCount() - 1); }
+      else if (e.key === 'End') { e.preventDefault(); if (closedState) openFromClosed(); else pageFlipInstance.turnToPage(pageFlipInstance.getPageCount() - 1); }
     });
   }
 
@@ -391,6 +396,124 @@
         }
       }, true);
     });
+  }
+
+  // ============== LIVRO FECHADO (capa centralizada) ==============
+  // Com showCover:true, a StPageFlip renderiza o livro fechado como o
+  // spread [0]: a capa ocupa só a METADE DIREITA do container e a metade
+  // esquerda fica um bloco vazio (o "bloco invisível" visto antes de
+  // abrir). Aqui, quando o livro está fechado em landscape (spread 0),
+  // a capa é centralizada via .book--closed (left: 25% no CSS) e a
+  // sombra do livro passa pra capa. Como a lib anima o flip assumindo
+  // a capa na metade direita, ABRIR é uma sequência em 2 tempos: a capa
+  // desliza pra posição nativa (.book--settling, 350ms) e SÓ ENTÃO o
+  // StPageFlip folhea — sem saltos no meio da animação.
+  function getSpreadIndexSafe() {
+    try {
+      const col = pageFlipInstance && pageFlipInstance.getPageCollection ? pageFlipInstance.getPageCollection() : null;
+      return col ? col.getCurrentSpreadIndex() : null;
+    } catch (_) { return null; }
+  }
+
+  function syncClosedState(withSettle) {
+    const bookEl = document.getElementById('cardapio-book');
+    if (!bookEl || !pageFlipInstance) return;
+    const shouldClose = getBreakpoint() !== 'mobile' && getSpreadIndexSafe() === 0;
+    closedState = shouldClose;
+    if (shouldClose && !bookEl.classList.contains('book--closed')) {
+      // withSettle: transita (flip de volta pra capa). Sem ele (build
+      // inicial/rebuild), aplica o estado na hora — sem slide.
+      if (withSettle) bookEl.classList.add('book--settling');
+      bookEl.classList.add('book--closed');
+      if (withSettle) setTimeout(() => bookEl.classList.remove('book--settling'), 380);
+    } else if (!shouldClose) {
+      bookEl.classList.remove('book--closed');
+      bookEl.classList.remove('book--settling');
+    }
+  }
+
+  function openFromClosed() {
+    if (openPending || !closedState || !pageFlipInstance) return;
+    openPending = true;
+    closedState = false; // para a interceptação imediatamente
+    const bookEl = document.getElementById('cardapio-book');
+    if (bookEl) {
+      // A transição precisa estar ATIVA no momento da mudança de left:
+      // adiciona o settling, remove o closed (left volta do 25% pro
+      // inline da lib = metade direita) e limpa o settling antes de folhear.
+      bookEl.classList.add('book--settling');
+      bookEl.classList.remove('book--closed');
+    }
+    setTimeout(() => {
+      const b = document.getElementById('cardapio-book');
+      if (b) b.classList.remove('book--settling');
+      openPending = false;
+      try {
+        if (pageFlipInstance) pageFlipInstance.flipNext();
+      } catch (err) {
+        console.warn('[Cardápio] erro ao abrir o cardápio:', err);
+      }
+    }, 370);
+  }
+
+  // Enquanto fechado, TODA abertura passa pela sequência acima. Os
+  // handlers da lib (click/swipe no .book) são interceptados na fase de
+  // CAPTURA no document — antes deles — e o click sintético pós-touch é
+  // suprimido, senão dispararia flip direto pulando o slide.
+  function bindClosedInterceptors() {
+    const inBook = (t) => {
+      const b = document.getElementById('cardapio-book');
+      return b && b.contains(t);
+    };
+    let touch = null;
+
+    document.addEventListener('mousedown', (e) => {
+      if (!closedState || !inBook(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openFromClosed();
+    }, true);
+
+    document.addEventListener('click', (e) => {
+      if (!inBook(e.target)) return;
+      if (closedState || openPending) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (closedState) openFromClosed(); // ex.: Enter no botão da capa
+      }
+    }, true);
+
+    document.addEventListener('touchstart', (e) => {
+      if (!closedState || !inBook(e.target)) return;
+      const t = e.touches && e.touches[0];
+      touch = t ? { x: t.clientX, y: t.clientY, moved: false } : null;
+      // Sem preventDefault: a rolagem vertical da página continua
+      // funcionando com o toque sobre o livro fechado.
+      e.stopPropagation(); // a lib não pode iniciar flip/swipe por conta própria
+    }, { capture: true, passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!touch) return;
+      const t = e.touches && e.touches[0];
+      if (!t) return;
+      const dx = t.clientX - touch.x, dy = t.clientY - touch.y;
+      if (Math.abs(dx) > 12 || Math.abs(dy) > 12) touch.moved = true;
+    }, { capture: true, passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!touch) return;
+      const st = touch; touch = null;
+      if (st.moved) {
+        // Swipe horizontal abre; vertical deixa a página rolar.
+        const t = e.changedTouches && e.changedTouches[0];
+        if (t) {
+          const dx = t.clientX - st.x, dy = t.clientY - st.y;
+          if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) openFromClosed();
+        }
+        return;
+      }
+      openFromClosed(); // toque simples = abrir
+    }, { capture: true, passive: true });
   }
 
   // ============== StPageFlip init / rebuild ==============
@@ -660,6 +783,10 @@
     destroyInstance();
     currentPages = pages;
     currentBreakpoint = getBreakpoint();
+    // Estado fechado é re-sincronizado após o loadFromHTML — as classes
+    // não podem sobrar do build anterior (innerHTML novo, lib nova).
+    bookEl.classList.remove('book--closed');
+    bookEl.classList.remove('book--settling');
 
     // Modo página única: empilha os cartões e retorna — nada de StPageFlip.
     if (SCROLL_MODE) {
@@ -784,9 +911,15 @@
       try { pageFlipInstance.turnToPage(Math.min(lastIndex, activePages.length - 1)); } catch (_) { /* noop */ }
     }
 
+    // Livro fechado (spread 0): centraliza a capa na hora (sem slide —
+    // é o estado inicial do build/rebuild).
+    syncClosedState(false);
+
     pageFlipInstance.on('flip', (e) => {
       updateIndicator(e.data);
       centerBookInViewport();
+      // Voltou pra capa: fecha com slide pra posição centralizada.
+      syncClosedState(true);
     });
     pageFlipInstance.on('changeOrientation', (e) => {
       // nada a fazer — o stretch cuida
@@ -909,6 +1042,7 @@
     // 5) Liga controles externos
     bindNav();
     bindKeyboard();
+    bindClosedInterceptors();
     setupModalClose();
 
     // 6) Resize
