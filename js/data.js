@@ -20,7 +20,6 @@
       phone: '(11) 96380-5855',
       whatsapp: '5511963805855',
       whatsappDisplay: '(11) 96380-5855',
-      email: 'contato@conquistabrasileira.com.br',
       instagram: 'https://www.instagram.com/conquista_brasileira',
       facebook: '',
       googleMaps: {
