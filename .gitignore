@@ -10,3 +10,5 @@ nul
 # Logs locais
 .server.log
 *.log
+.vercel
+.env*
