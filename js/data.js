@@ -28,26 +28,50 @@
       }
     },
     seo: {
-      title: 'Conquista Brasileira Ind e Com de Doces e Salgados Ltda | Cajamar SP',
+      title: 'Pastelaria em Cajamar | Conquista Brasileira',
       description: 'Pastelaria em Cajamar com pastéis tradicionais, especiais e doces. Faça seu pedido pelo WhatsApp.',
       keywords: 'pastelaria cajamar, pastel em cajamar, delivery cajamar, pastel brasileiro',
       schema: {
         '@context': 'https://schema.org',
         '@type': 'Restaurant',
-        name: 'Conquista Brasileira Ind e Com de Doces e Salgados Ltda',
+        name: 'Conquista Brasileira',
+        legalName: 'BRASILEIRA RESTAURANTE PASTELARIA INDUSTRIA E COMERCIO DE DOCES E SALGADOS LTDA',
+        url: 'https://pastelariaconquista.com.br/',
+        telephone: '+55-11-96380-5855',
+        image: 'https://pastelariaconquista.com.br/assets/images/og-image.jpg',
+        logo: 'https://pastelariaconquista.com.br/assets/images/icon-512.png',
+        priceRange: '$$',
+        servesCuisine: 'Pastelaria Brasileira',
+        currenciesAccepted: 'BRL',
         address: {
           '@type': 'PostalAddress',
+          streetAddress: 'Av. Ten. Marques, 1077 - Polvilho',
           addressLocality: 'Cajamar',
           addressRegion: 'SP',
+          postalCode: '07793-450',
           addressCountry: 'BR'
         },
         geo: {
           '@type': 'GeoCoordinates',
-          latitude: -23.3558,
-          longitude: -46.8761
+          latitude: -23.4103,
+          longitude: -46.8916
         },
-        priceRange: '$$',
-        servesCuisine: 'Pastelaria Brasileira'
+        hasMap: 'https://www.google.com/maps/search/?api=1&query=-23.4103,-46.8916',
+        sameAs: ['https://www.instagram.com/conquista_brasileira'],
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            opens: '07:00',
+            closes: '22:30'
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: 'Sunday',
+            opens: '07:00',
+            closes: '15:00'
+          }
+        ]
       }
     },
     hours: [
