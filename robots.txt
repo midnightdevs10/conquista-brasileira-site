@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://conquistabrasileira.com.br/sitemap.xml
+Sitemap: https://pastelariaconquista.com.br/sitemap.xml
