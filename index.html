@@ -15,6 +15,7 @@
   <link rel="canonical" href="https://pastelariaconquista.com.br/" />
 
   <!-- Favicon / Ícones -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="assets/images/icon-512.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png" />
@@ -46,8 +47,52 @@
   <meta name="twitter:description" content="Os melhores pastéis de Cajamar. Tradição, ingredientes selecionados e atendimento de família. Peça pelo WhatsApp." />
   <meta name="twitter:image" content="https://pastelariaconquista.com.br/assets/images/og-image.jpg" />
 
-  <!-- Schema.org Local Business / Restaurant -->
-  <script type="application/ld+json" id="schema-org"></script>
+  <!-- Schema.org Local Business / Restaurant (estático no HTML p/ o Google ler sem depender de JS;
+       o main.js reescreve com o mesmo conteúdo de js/data.js) -->
+  <script type="application/ld+json" id="schema-org">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Conquista Brasileira",
+    "legalName": "BRASILEIRA RESTAURANTE PASTELARIA INDUSTRIA E COMERCIO DE DOCES E SALGADOS LTDA",
+    "url": "https://pastelariaconquista.com.br/",
+    "telephone": "+55-11-96380-5855",
+    "image": "https://pastelariaconquista.com.br/assets/images/og-image.jpg",
+    "logo": "https://pastelariaconquista.com.br/assets/images/icon-512.png",
+    "priceRange": "$$",
+    "servesCuisine": "Pastelaria Brasileira",
+    "currenciesAccepted": "BRL",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Ten. Marques, 1077 - Polvilho",
+      "addressLocality": "Cajamar",
+      "addressRegion": "SP",
+      "postalCode": "07793-450",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -23.4103,
+      "longitude": -46.8916
+    },
+    "hasMap": "https://www.google.com/maps/search/?api=1&query=-23.4103,-46.8916",
+    "sameAs": ["https://www.instagram.com/conquista_brasileira"],
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "07:00",
+        "closes": "22:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "07:00",
+        "closes": "15:00"
+      }
+    ]
+  }
+  </script>
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/reset.css" />
